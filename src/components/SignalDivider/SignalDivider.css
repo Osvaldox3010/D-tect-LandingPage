@@ -1,0 +1,9 @@
+.signal-divider{ position:relative; padding:18px 0; border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
+.signal-divider__inner{ display:flex; align-items:center; gap:18px; }
+.signal-divider__label{ font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; font-weight:600; color:var(--navy); white-space:nowrap; }
+.signal-divider__wave{ flex:1; color:var(--navy); opacity:.55; overflow:hidden; }
+.signal-divider__wave svg{ width:100%; height:18px; display:block; }
+.signal-divider .status{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.signal-divider .status .dot{ width:6px; height:6px; border-radius:50%; background:var(--brand-green); animation:pulseDot 1.8s ease-in-out infinite; }
+@keyframes pulseDot{ 0%,100%{ opacity:.4; transform:scale(.8); } 50%{ opacity:1; transform:scale(1.15); } }
+@media (prefers-reduced-motion:reduce){ .signal-divider .status .dot{ animation:none; } }

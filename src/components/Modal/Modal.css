@@ -1,0 +1,33 @@
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(13,24,38,.55); backdrop-filter:blur(3px); z-index:400;
+  opacity:0; visibility:hidden; transition:opacity .35s var(--ease-soft), visibility 0s linear .35s;
+  display:flex; align-items:flex-end; justify-content:center; padding:0;
+}
+@media (min-width:768px){ .modal-overlay{ align-items:center; padding:24px; } }
+.modal-overlay.is-open{ opacity:1; visibility:visible; transition:opacity .35s var(--ease-soft); }
+
+.modal{
+  position:relative; background:var(--bg-base); width:100%; max-width:520px; max-height:92vh; overflow-y:auto;
+  border-radius:var(--r-lg) var(--r-lg) 0 0; padding:32px 26px 36px;
+  transform:translateY(24px) scale(.98); opacity:0;
+  transition:transform .4s var(--ease-soft), opacity .4s var(--ease-soft);
+}
+@media (min-width:768px){ .modal{ border-radius:var(--r-lg); padding:44px; transform:scale(.97); } }
+.modal-overlay.is-open .modal{ transform:none; opacity:1; }
+
+.modal--video{ max-width:860px; background:transparent; padding:0; }
+.modal--video .video-frame{
+  position:relative; aspect-ratio:16/9; background:var(--navy); border-radius:var(--r-md); overflow:hidden;
+  display:flex; align-items:center; justify-content:center; color:#fff;
+}
+.modal--video .video-frame .scope-canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
+.modal--video .video-frame p{ position:relative; z-index:1; font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; opacity:.75; }
+
+.modal__close{
+  position:absolute; top:16px; right:16px; width:38px; height:38px; border-radius:50%;
+  border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; background:var(--bg-base); z-index:2;
+}
+.modal--video .modal__close{ background:rgba(247,247,245,.9); }
+.modal__eyebrow{ margin-bottom:14px; }
+.modal h3{ font-family:var(--font-display); font-weight:700; font-size:25px; margin-bottom:6px; }
+.modal p.modal__sub{ color:var(--text-gray); font-size:14.5px; margin-bottom:24px; }

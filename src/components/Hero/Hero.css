@@ -1,0 +1,154 @@
+.hero{ position:relative; padding:44px 0 40px; overflow:hidden; }
+@media (min-width:768px){ .hero{ padding:60px 0 52px; } }
+@media (min-width:1200px){ .hero{ padding:76px 0 64px; } }
+
+.hero__grid{ position:relative; z-index:4; display:flex; flex-direction:column; gap:36px; }
+@media (min-width:1200px){
+  .hero__grid{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; min-height:520px; }
+  .hero__grid > div:first-child{ padding-right:24px; }
+}
+
+/* Halo con el color de fondo detrás del bloque de texto (headline, texto,
+   botones, indicador): se desvanece hacia afuera y vive por delante de la
+   animación ambiental (que ya pinta por detrás de .hero__grid). El efecto
+   es que la onda se "apaga" con naturalidad al acercarse al texto en vez
+   de cortarse en seco contra un borde recto. z-index:-1 la mantiene detrás
+   del propio texto (que es contenido estático dentro de este mismo
+   contexto de apilamiento), así que nunca tapa las letras ni los botones. */
+.hero__grid > div:first-child{ position:relative; }
+.hero__grid > div:first-child::before{
+  content:''; position:absolute; z-index:-1; pointer-events:none;
+  inset:-20% -14% -14% -24%;
+  background:radial-gradient(ellipse 72% 68% at 40% 46%, var(--bg-base) 0%, var(--bg-base) 52%, transparent 82%);
+}
+
+.hero__label{ margin-bottom:18px; }
+.hero__label .dot{ background:var(--service-accent); transition:background-color .35s; }
+
+.hero__headline{ font-family:var(--font-display); font-weight:800; font-size:clamp(34px,7.6vw,50px); line-height:1.08; letter-spacing:-.01em; color:var(--navy); }
+@media (min-width:1200px){ .hero__headline{ font-size:clamp(44px,4.2vw,60px); } }
+.hero__headline .line{ display:block; }
+.hero__headline .g{ color:var(--brand-green); }
+.hero__headline .r{ color:var(--brand-red); }
+
+.hero__desc{ margin-top:20px; max-width:420px; font-size:16.5px; color:var(--text-gray); }
+.hero__actions{ margin-top:30px; display:flex; align-items:center; flex-wrap:wrap; gap:22px; }
+.hero__actions .btn-primary{ transition:background-color .4s var(--ease-soft), transform .3s var(--ease-soft), box-shadow .3s; }
+.hero__actions .btn-primary:hover{ filter:brightness(.9); }
+
+/* ---- Indicador ---- */
+.hero__indicator{ margin-top:38px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.hero__playpause{ width:40px; height:40px; border-radius:50%; border:1px solid var(--border-soft); flex:none; display:flex; align-items:center; justify-content:center; transition:border-color .3s, background-color .3s; }
+.hero__playpause:hover{ border-color:var(--service-accent); background:rgba(0,0,0,.03); }
+.hero__playpause svg{ width:12px; height:12px; color:var(--navy); }
+
+.hero__indicator-text{ display:flex; flex-direction:column; line-height:1.3; min-width:150px; }
+.hero__indicator-num{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; color:var(--text-gray); }
+.hero__indicator-name{ font-weight:700; font-size:15px; transition:color .4s var(--ease-soft); }
+.hero__indicator-caption{ font-size:12.5px; color:var(--text-gray); }
+
+.hero__dots{ display:flex; gap:8px; margin-left:auto; }
+.hero__dots button{ width:8px; height:8px; border-radius:50%; background:var(--border-soft); transition:background-color .3s, width .3s; border:none; }
+.hero__dots button.is-active{ width:22px; border-radius:4px; }
+
+/* ---- Visual ---- */
+/* height (no min-height): tamaño REALMENTE fijo, para que el chip de abajo
+   tenga una referencia predecible sin importar cuánto contenido tenga el
+   texto de al lado ni qué tan alta sea la imagen activa. */
+.hero__visual{ position:relative; height:290px; display:flex; align-items:center; justify-content:center; }
+@media (min-width:640px){ .hero__visual{ height:360px; } }
+@media (min-width:1200px){ .hero__visual{ height:440px; } }
+
+/* Capa ambiental: cubre TODA la sección del Hero (texto + visual), sin caja,
+   sin overflow/border-radius que la encierre. Vive detrás de .hero__grid
+   siempre — .hero__grid tiene z-index propio y gana por reglas de stacking
+   normales, así que esta capa nunca se dibuja por encima de ningún
+   contenido (ni texto ni imágenes). */
+.hero__ambient{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden;
+}
+
+.hero__stage-wrap{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.hero__stage{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .8s var(--ease-soft); }
+.hero__stage.is-active{ opacity:1; pointer-events:auto; }
+
+/* Ya no hay "tarjeta": las imágenes son PNG recortados (fondo transparente)
+   que flotan directo sobre la sección, sin fondo/borde/sombra que las
+   encierre en una caja y contraste con el fondo de la página. */
+.stage-frame{
+  position:relative; width:min(420px,86%);
+}
+.stage-frame img{ display:block; width:100%; height:auto; }
+
+/* Chip de servicio: posición FIJA, pegada al fondo de .hero__stage (tamaño
+   ahora realmente constante), separada de la imagen a propósito — nunca
+   salta de lugar al rotar de servicio, sin importar la altura de cada foto. */
+.stage-frame__tag{
+  position:absolute; left:6%; bottom:14px; z-index:2;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:600;
+  color:var(--service-accent); white-space:nowrap;
+  background:color-mix(in srgb, var(--service-accent) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--service-accent) 28%, transparent);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  padding:6px 12px; border-radius:999px;
+}
+
+/* ---- Pantalla del laptop (poligrafía): hueco transparente real en el PNG,
+   calculado sobre las coordenadas exactas del recorte object-fit:cover.
+   Tiene fondo propio (no transparente) para que la animación ambiental de
+   atrás nunca se asome aquí — solo las 3 ondas independientes del canvas. ---- */
+.stage-frame__screen{
+  position:absolute; left:27%; top:3.7%; width:57.6%; height:44.2%;
+  overflow:hidden; border-radius:2px 2px 0 0; pointer-events:none;
+  background:#f4f7fb;
+}
+.screen-waves-canvas{ width:100%; height:100%; display:block; }
+
+/* ---- Animaciones ambientales (sección 4.5) ---- */
+/* Canvas a pantalla completa de la sección. Vignette radial (no solo
+   arriba/abajo) para que se desvanezca en las 4 direcciones — si solo
+   hay fundido vertical, cualquier blob/onda que llegue al borde
+   izquierdo o derecho choca en seco contra el overflow:hidden de .hero. */
+.amb-pulse-canvas, .amb-smoke-canvas{
+  position:absolute; inset:0; width:100%; height:100%;
+  -webkit-mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
+}
+.amb-pulse-canvas{ opacity:.4; }
+
+/* Íconos flotantes (estudio socioeconómico): contenedor donde EcoAnimation
+   inyecta/retira los <div class="eco-symbol"> imperativamente. Mismo
+   vignette que el resto para que también se desvanezcan en los bordes. */
+.eco-symbols{
+  position:absolute; inset:0; overflow:hidden;
+  -webkit-mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
+}
+.eco-symbol{
+  position:absolute; pointer-events:none; will-change:transform, opacity;
+  filter:drop-shadow(0 0 4px color-mix(in srgb, var(--accent-socioeconomico) 45%, transparent));
+}
+.eco-symbol svg{ display:block; width:100%; height:100%; }
+
+.verify-ring{
+  position:absolute; top:80%; left:50%; width:min(220px,42vw); aspect-ratio:1/1; transform:translate(-50%,-50%); border-radius:50%;
+  border:1.5px dashed color-mix(in srgb, var(--accent-antecedentes) 70%, transparent);
+  opacity:.6; animation:ringSpin 26s linear infinite;
+}
+@media (min-width:1200px){
+  .verify-ring{ top:50%; left:74%; width:min(300px,26vw); }
+}
+@keyframes ringSpin{ from{ transform:translate(-50%,-50%) rotate(0deg); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
+.verify-status{
+  position:absolute; top:calc(80% + min(220px,42vw) / 2 + 14px); left:50%; transform:translateX(-50%);
+  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; font-family:var(--font-mono);
+  color:var(--accent-antecedentes); transition:color .4s ease;
+}
+@media (min-width:1200px){
+  .verify-status{ top:calc(50% + min(300px,26vw) / 2 + 14px); left:74%; }
+}
+.verify-status.is-verified{ color:var(--brand-green); }
+
+@media (prefers-reduced-motion:reduce){
+  .verify-ring{ animation:none !important; }
+}

@@ -1,0 +1,35 @@
+.contact{ padding:70px 0 56px; }
+@media (min-width:1200px){ .contact{ padding:100px 0 80px; } }
+.contact__head{ margin-bottom:40px; max-width:460px; }
+.contact__head h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(28px,5vw,42px); }
+.contact__head p{ margin-top:14px; color:var(--text-gray); font-size:16px; }
+
+.contact__grid{ display:flex; flex-direction:column; gap:44px; }
+@media (min-width:1024px){
+  .contact__grid{ flex-direction:row; align-items:flex-start; }
+  .contact__methods{ width:24%; flex:none; }
+  .contact__form-wrap{ flex:1; }
+  .contact__map-wrap{ width:30%; flex:none; }
+}
+
+.contact-method{ display:flex; align-items:center; gap:14px; padding:16px 0; border-bottom:1px solid var(--border-soft); }
+.contact-method:first-child{ padding-top:0; }
+.contact-method a{ display:flex; align-items:center; gap:14px; width:100%; }
+.contact-method__icon{ width:40px; height:40px; border-radius:50%; border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; flex:none; color:var(--navy); transition:color .3s, border-color .3s, background-color .3s; }
+.contact-method__icon svg{ width:17px; height:17px; }
+.contact-method__label{ font-size:12px; color:var(--text-gray); display:block; }
+.contact-method__value{ font-weight:700; font-size:14.5px; margin-top:2px; display:block; }
+.contact-method:hover .contact-method__icon{ color:var(--brand-red); border-color:var(--brand-red); background:rgba(193,68,58,.06); }
+
+.map-card{
+  position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--border-soft); aspect-ratio:4/3;
+  background:
+    linear-gradient(180deg, rgba(247,247,245,.2), rgba(247,247,245,.6)),
+    repeating-linear-gradient(0deg, #EFEFEC 0 26px, #E6E6E2 26px 27px),
+    repeating-linear-gradient(90deg, #EFEFEC 0 26px, #E6E6E2 26px 27px);
+}
+.map-card__label{ position:absolute; top:14px; left:14px; background:var(--bg-card); border:1px solid var(--border-soft); border-radius:999px; padding:8px 14px; font-size:12px; font-weight:700; }
+.map-card__pin{ position:absolute; left:52%; top:46%; transform:translate(-50%,-100%); color:var(--brand-red); width:30px; height:30px; transition:transform .3s var(--ease-soft); cursor:pointer; }
+.map-card__pin:hover{ transform:translate(-50%,-105%) scale(1.1); }
+.map-card__addr{ position:absolute; bottom:14px; left:14px; right:14px; background:rgba(255,255,255,.92); border-radius:8px; padding:12px 14px; font-size:12.5px; color:var(--text-gray); }
+.map-card__addr strong{ display:block; color:var(--navy); font-size:13.5px; margin-bottom:2px; }

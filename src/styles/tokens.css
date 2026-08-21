@@ -1,0 +1,40 @@
+:root{
+  /* 2.1 Paleta base */
+  --bg-base:#F7F7F5;
+  --bg-card:#FFFFFF;
+  --navy:#16243F;
+  --navy-deep:#0D1826;
+  --brand-green:#2E8B57;
+  --brand-red:#C1443A;
+  --text-gray:#6B7280;
+  --border-soft:#E5E5E2;
+
+  /* 2.2 Acentos por servicio (rotan con el Hero) */
+  --accent-poligrafia:#1B3358;
+  --accent-toxicologia:#2F7A76;
+  --accent-psicometria:#4B4E8F;
+  --accent-socioeconomico:#B8873B;
+  --accent-antecedentes:#C1443A;
+
+  /* Tipografía */
+  --font-display:'Inter',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+
+  /* Timing / easing */
+  --ease:cubic-bezier(.19,.86,.28,1);
+  --ease-soft:cubic-bezier(.33,.72,.35,1);
+
+  /* Layout */
+  --container:1280px;
+  --pad:20px;
+  --r-sm:8px;
+  --r-md:16px;
+  --r-lg:26px;
+
+  /* Acento activo del Hero — sobreescrito en runtime por Hero.jsx */
+  --service-accent:var(--accent-poligrafia);
+}
+
+@media (min-width:768px){ :root{ --pad:40px; } }
+@media (min-width:1200px){ :root{ --pad:64px; } }
