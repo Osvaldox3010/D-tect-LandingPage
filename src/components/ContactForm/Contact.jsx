@@ -4,11 +4,20 @@ import './Contact.css';
 
 const METHODS = [
   {
-    label: 'WhatsApp', value: '55 1234 5678', href: 'https://wa.me/525512345678',
-    icon: <path d="M4 17L5.1 13.3C4.3 12 3.9 10.5 3.9 9C3.9 4.6 7.5 1 12 1C16.4 1 20 4.6 20 9C20 13.4 16.4 17 12 17C10.6 17 9.3 16.6 8.1 15.9L4 17Z" stroke="currentColor" strokeWidth="1.4" transform="translate(-2,0.5) scale(0.85)" />,
+    label: 'WhatsApp',
+    value: '5565256934',
+    href: `https://wa.me/525565256934?text=${encodeURIComponent(
+      'Me gustaría solicitar más información.'
+    )}`,
+    icon: <path
+      d="M4 17L5.1 13.3C4.3 12 3.9 10.5 3.9 9C3.9 4.6 7.5 1 12 1C16.4 1 20 4.6 20 9C20 13.4 16.4 17 12 17C10.6 17 9.3 16.6 8.1 15.9L4 17Z"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      transform="translate(-2,0.5) scale(0.85)"
+    />,
   },
   {
-    label: 'Llamadas', value: '55 1234 5678', href: 'tel:+525512345678',
+    label: 'Llamadas', value: '55 1234 5678', href: 'tel:+525565256934',
     icon: <path d="M4 3H8L10 8L7.5 9.5C8.4 11.5 9.9 13 11.9 13.9L13.5 11.5L18.5 13.5V17.5C18.5 18.6 17.6 19.5 16.5 19.5C9.6 19 1 10.4 0.5 3.5C0.5 2.4 1.4 1.5 2.5 1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />,
   },
   {
