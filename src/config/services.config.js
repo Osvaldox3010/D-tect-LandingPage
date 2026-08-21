@@ -65,7 +65,10 @@ export const services = [
 
 /** Timing exacto de la sección 4.3 del brief */
 export const HERO_TIMING = {
-  stateDuration: 7500,   // ms visibles por estado
+  // MODIFICADO: 7500 -> 9000. Cada estado del Hero (Poligrafía, Toxicología,
+  // Psicometría, Estudio socioeconómico, Antecedentes penales) ahora se
+  // queda 9s visible antes de rotar al siguiente, como se pidió.
+  stateDuration: 9000,   // ms visibles por estado
   transitionDuration: 800, // ms de transición entre estados
   resumeDelay: 12000,    // ms de inactividad antes de reanudar
 };

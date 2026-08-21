@@ -269,9 +269,22 @@ import { useReducedMotion } from '../../../hooks/useReducedMotion';
  *  - un contenedor del tamaño de la sección, no de toda la pantalla,
  *  - composición normal en vez de 'lighter'+'screen' (esas dos son para
  *    fondo oscuro; sobre el fondo claro del sitio se veían invisibles),
- *  - la paleta de la marca (teal de --accent-toxicologia) en vez de verde,
  *  - burbujas más grandes y translúcidas, humo con alfa suficiente para
  *    notarse pero sin ser el protagonista.
+ *
+ * MODIFICADO:
+ *  - El humo ya NO usa el teal de marca (--accent-toxicologia): ahora es
+ *    gris neutro (con un ligerísimo tinte azulado, como el humo real) en
+ *    vez de verde/teal. Cada blob varía más su luminosidad entre sí (ver
+ *    SmokePlume.draw) para que no se lea como "una mancha de un solo tono
+ *    difuminada", sino con algo de profundidad/textura.
+ *  - El "fade in" de cada plume de humo ya no depende de su maxLife
+ *    (que podía tardar hasta ~10-14s en notarse a tamaño completo): ahora
+ *    entra a alfa completo en medio segundo (ver FADE_IN_FRAMES) y se
+ *    mantiene así hasta que empieza a apagarse cerca del final de su vida.
+ *  - Las burbujas crecen otro 15% (radio base subía de 5-15 a 5-18): el
+ *    tamaño mínimo se queda igual y el máximo queda ~20% más grande, con
+ *    tamaño aleatorio entre esos dos extremos, como se pidió.
  */
 
 function rand(min, max) { return Math.random() * (max - min) + min; }
@@ -300,6 +313,12 @@ class Blob {
   }
 }
 
+// MODIFICADO: cuánto tarda (en frames, ~60fps) un plume de humo en llegar
+// a su alfa completo al nacer. Antes esto era maxLife*0.25 (podía ser
+// varios segundos); ahora es fijo y corto para que se note casi de
+// inmediato.
+const SMOKE_FADE_IN_FRAMES = 34;
+
 class SmokePlume {
   constructor(W, H) { this.W = W; this.H = H; this.reset(true); }
   reset(initial) {
@@ -310,8 +329,12 @@ class SmokePlume {
     this.vy = rand(-0.16, -0.06);
     this.vx = rand(-0.05, 0.05);
     this.turbulence = rand(10, 24);
-    this.hue = rand(165, 188); // teal — accent-toxicologia
-    this.sat = rand(45, 65);
+    // MODIFICADO: antes era teal (hue 165-188, el acento de marca de
+    // Toxicología). Ahora es un gris neutro con ligerísimo tinte azulado
+    // (hue ~205-222, saturación muy baja) para que se lea como humo real
+    // y no como una forma coloreada y difuminada.
+    this.hue = rand(205, 222);
+    this.sat = rand(6, 16);
     this.baseAlpha = rand(0.16, 0.3);
     this.life = 0;
     this.maxLife = rand(1800, 3400);
@@ -336,10 +359,17 @@ class SmokePlume {
   }
   draw(ctx) {
     const t = this.life / this.maxLife;
-    const growth = Math.min(1, this.life / (this.maxLife * 0.25));
+    // MODIFICADO: crecimiento de tamaño también ligado al fade-in rápido
+    // (antes tardaba maxLife*0.25 frames, ahora SMOKE_FADE_IN_FRAMES).
+    const growth = Math.min(1, this.life / SMOKE_FADE_IN_FRAMES);
     const shrink = t > 0.7 ? 1 - (t - 0.7) / 0.3 : 1;
     const sizeMul = growth * shrink;
-    const fade = Math.sin(Math.PI * Math.min(t, 1));
+    // MODIFICADO: antes "fade" era sin(pi*t) — una curva que empieza en
+    // 0 y sube lento durante buena parte de la vida del plume, por eso
+    // tardaba en notarse. Ahora es un fade-in rápido y lineal seguido de
+    // alfa completo sostenido, con el mismo apagado suave al final.
+    const fadeIn = Math.min(1, this.life / SMOKE_FADE_IN_FRAMES);
+    const fade = fadeIn * shrink;
     const alpha = this.baseAlpha * fade;
     if (alpha <= 0.002 || sizeMul <= 0.001) return;
 
@@ -348,10 +378,13 @@ class SmokePlume {
       const pos = b.getPos(timeSec);
       const r = b.rBase * sizeMul;
       const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, Math.max(1, r));
-      const l1 = 46 + Math.sin(b.seed) * 6;
-      grad.addColorStop(0, `hsla(${this.hue}, ${this.sat}%, ${l1 + 8}%, ${alpha})`);
+      // MODIFICADO: rango de luminosidad más amplio por blob (antes ±6,
+      // ahora ±14) para que dentro de un mismo plume haya zonas más
+      // claras y más oscuras — más textura, menos "mancha plana".
+      const l1 = 42 + Math.sin(b.seed) * 14;
+      grad.addColorStop(0, `hsla(${this.hue}, ${this.sat}%, ${l1 + 10}%, ${alpha})`);
       grad.addColorStop(0.45, `hsla(${this.hue}, ${this.sat}%, ${l1}%, ${alpha * 0.6})`);
-      grad.addColorStop(1, `hsla(${this.hue}, ${this.sat}%, ${l1 - 8}%, 0)`);
+      grad.addColorStop(1, `hsla(${this.hue}, ${this.sat}%, ${l1 - 10}%, 0)`);
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, Math.max(0, r), 0, Math.PI * 2);
@@ -366,7 +399,10 @@ class Bubble {
     const { W, H } = this;
     this.x = rand(0, W);
     this.y = H + rand(6, 40);
-    this.r = rand(5, 15);
+    // MODIFICADO: 15% más grandes en general — el mínimo se queda igual
+    // (5) y el máximo sube ~20% (15 -> 18), con tamaño aleatorio entre
+    // ambos, como se pidió.
+    this.r = rand(5, 18);
     this.speed = rand(0.28, 1) * (1 + (14 - this.r) / 26);
     this.drift = rand(-0.25, 0.25);
     this.wobblePhase = rand(0, Math.PI * 2);

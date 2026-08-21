@@ -32,7 +32,15 @@ import { useReducedMotion } from '../../../hooks/useReducedMotion';
  * de la sección (no toda la pantalla) — tamaños y desplazamientos más
  * chicos, menos íconos a la vez y spawn más lento para que sea un fondo
  * discreto, y color llevado a --accent-socioeconomico.
+ *
+ * MODIFICADO: los íconos tardaban en notarse por dos motivos — el
+ * "stagger" inicial los soltaba de a uno cada 500ms (hasta 3.5s para el
+ * último de la tanda inicial), y dentro de la animación de cada ícono la
+ * opacidad no llegaba a su punto más visible (0.55) hasta el 35% de su
+ * duración (hasta ~5.25s en los íconos más largos). Ambos se acortaron
+ * (ver INITIAL_STAGGER_MS y los offsets del keyframe en createSymbol).
  */
+const INITIAL_STAGGER_MS = 150; // antes 500
 const ICON_PATHS = [
   '<path d="M12 7v10M9.5 9.5c0-1.4 1.2-2.2 2.5-2.2s2.5.9 2.5 2.1c0 3-5 1.6-5 4.5 0 1.3 1.2 2.1 2.5 2.1s2.5-.8 2.5-2.1"/><circle cx="12" cy="12" r="9"/>',
   '<rect x="2" y="6" width="20" height="12" rx="1.5"/><circle cx="12" cy="12" r="3"/><path d="M5 9v0M19 15v0"/>',
@@ -88,9 +96,12 @@ export function EcoAnimation() {
       el.style.opacity = '0';
       stage.appendChild(el);
 
+      // MODIFICADO: el pico de opacidad (0.55) ahora llega al 12% de la
+      // duración en vez del 35% — el ícono se hace notar mucho más rápido
+      // al aparecer, en vez de ir subiendo de a poco por varios segundos.
       const animation = el.animate([
         { transform: `translate(0px, 0px) rotate(${rotStart}deg) scale(0.6)`, opacity: 0 },
-        { transform: `translate(${drift * 0.3}px, ${rise * 0.4}px) rotate(${(rotStart + rotEnd) / 2}deg) scale(1)`, opacity: 0.55, offset: 0.35 },
+        { transform: `translate(${drift * 0.15}px, ${rise * 0.18}px) rotate(${(rotStart + rotEnd) / 2}deg) scale(1)`, opacity: 0.55, offset: 0.12 },
         { transform: `translate(${drift * 0.7}px, ${rise * 0.75}px) rotate(${rotEnd}deg) scale(1)`, opacity: 0.4, offset: 0.7 },
         { transform: `translate(${drift}px, ${rise}px) rotate(${rotEnd + rand(-30, 30)}deg) scale(0.7)`, opacity: 0 },
       ], { duration: duration * 1000, easing: 'ease-in-out', fill: 'forwards' });
@@ -123,7 +134,7 @@ export function EcoAnimation() {
 
     const initialCount = isMobile ? 4 : 7;
     for (let i = 0; i < initialCount; i++) {
-      const t = setTimeout(createSymbol, i * 500);
+      const t = setTimeout(createSymbol, i * INITIAL_STAGGER_MS);
       timeouts.push(t);
     }
 

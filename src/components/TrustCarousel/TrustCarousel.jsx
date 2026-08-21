@@ -13,8 +13,24 @@ export function TrustCarousel() {
   const resumeTimer = useRef(null);
   const reducedMotion = useReducedMotion();
 
-  const pause = () => { interacting.current = true; clearTimeout(resumeTimer.current); };
-  const resumeSoon = () => { resumeTimer.current = setTimeout(() => { interacting.current = false; }, 1600); };
+  // MODIFICADO: el autoplay (el raf de abajo que hace track.scrollLeft += 0.45)
+  // no se notaba porque el track tenía scroll-snap-type:x mandatory de forma
+  // permanente (ver TrustCarousel.css) — el navegador snapeaba de vuelta al
+  // punto más cercano en cada micro-incremento, así que visualmente el
+  // carrusel se quedaba quieto. Ahora el snap solo se activa mientras el
+  // usuario interactúa (pause) y se quita de nuevo cuando el autoplay
+  // retoma (resumeSoon), vía la clase .is-snapping.
+  const pause = () => {
+    interacting.current = true;
+    clearTimeout(resumeTimer.current);
+    trackRef.current?.classList.add('is-snapping');
+  };
+  const resumeSoon = () => {
+    resumeTimer.current = setTimeout(() => {
+      interacting.current = false;
+      trackRef.current?.classList.remove('is-snapping');
+    }, 1600);
+  };
 
   function cardStep() {
     const track = trackRef.current;
@@ -80,41 +96,57 @@ export function TrustCarousel() {
               actúe dentro del marco organizacional.
             </p>
           </div>
-          <div className="applications__controls">
-            <button className="carousel-btn" aria-label="Anterior" onClick={() => scrollByCards(-1)}>
-              <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-            <button className="carousel-btn" aria-label="Siguiente" onClick={() => scrollByCards(1)}>
-              <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-          </div>
+          {/* MODIFICADO: los botones ya no viven aquí arriba, junto al
+              título — se movieron a los costados del carrusel (ver
+              .carousel-wrap más abajo), como se pidió. */}
         </div>
       </div>
 
       <div className="container">
-        <div
-          className="carousel-track"
-          ref={trackRef}
-          tabIndex={0}
-          aria-label="Evaluaciones — desliza para ver más"
-          onMouseEnter={pause}
-          onMouseLeave={resumeSoon}
-          onTouchStart={pause}
-          onTouchEnd={resumeSoon}
-        >
-          {DOUBLED.map((svc, i) => (
-            <div className="app-card" key={`${svc.key}-${i}`} style={{ borderTopColor: `var(${svc.accentVar})` }}>
-              <div className="app-card__media">
-                <img src={svc.image} alt={svc.name} loading="lazy" />
+        {/* MODIFICADO: nuevo wrapper posicionado (position:relative) para
+            poder anclar los botones a los costados DEL CARRUSEL en vez de
+            arriba, y para poder aplicar el desvanecido en los bordes
+            izquierdo/derecho sin afectar el recuadro de las tarjetas. */}
+        <div className="carousel-wrap">
+          {/* MODIFICADO: antes eran botones circulares con un borde
+              encima del carrusel; ahora son flechas simples "‹ ›" a los
+              costados, sin círculo ni relleno. */}
+          <button className="carousel-side-btn carousel-side-btn--prev" aria-label="Anterior" onClick={() => scrollByCards(-1)}>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+          <button className="carousel-side-btn carousel-side-btn--next" aria-label="Siguiente" onClick={() => scrollByCards(1)}>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+
+          <div
+            className="carousel-track"
+            ref={trackRef}
+            tabIndex={0}
+            aria-label="Evaluaciones — desliza para ver más"
+            onMouseEnter={pause}
+            onMouseLeave={resumeSoon}
+            onTouchStart={pause}
+            onTouchEnd={resumeSoon}
+          >
+            {DOUBLED.map((svc, i) => (
+              <div className="app-card" key={`${svc.key}-${i}`} style={{ borderTopColor: `var(${svc.accentVar})` }}>
+                {/* MODIFICADO: la imagen ahora usa object-fit:contain (más
+                    un fondo suave dentro del recuadro) en vez de cover, para
+                    que se vea completa dentro del recuadro en vez de
+                    recortada — el recuadro (.app-card__media) no cambió de
+                    tamaño/forma, solo cómo se ajusta la imagen adentro. */}
+                <div className="app-card__media">
+                  <img src={svc.image} alt={svc.name} loading="lazy" />
+                </div>
+                <div className="app-card__body">
+                  <span className="app-card__icon" style={{ background: `var(${svc.accentVar})` }}>
+                    <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.4" /></svg>
+                  </span>
+                  <span className="app-card__title">{svc.name}</span>
+                </div>
               </div>
-              <div className="app-card__body">
-                <span className="app-card__icon" style={{ background: `var(${svc.accentVar})` }}>
-                  <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.4" /></svg>
-                </span>
-                <span className="app-card__title">{svc.name}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         <div className="carousel-dots">
           {services.map((svc, i) => (

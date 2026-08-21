@@ -4,19 +4,41 @@
 @media (min-width:1200px){ .applications__head{ flex-direction:row; justify-content:space-between; align-items:flex-end; } }
 .applications__title{ font-family:var(--font-display); font-weight:700; font-size:clamp(27px,4.8vw,38px); letter-spacing:-.01em; max-width:460px; }
 .applications__desc{ margin-top:14px; color:var(--text-gray); max-width:620px; font-size:15.5px; line-height:1.6; }
-.applications__controls{ display:flex; align-items:center; gap:10px; flex:none; }
-.carousel-btn{ width:44px; height:44px; border-radius:50%; border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; transition:border-color .3s, transform .3s; flex:none; }
-.carousel-btn:hover{ border-color:var(--navy); }
-.carousel-btn svg{ width:16px; height:16px; }
+/* MODIFICADO: los botones ya no van aquí (arriba, junto al título) —
+   ver .carousel-side-btn más abajo, ahora a los costados del carrusel. */
 
-.carousel-track{ display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:6px; scrollbar-width:none; -ms-overflow-style:none; }
+/* MODIFICADO: wrapper nuevo para poder anclar los botones a los costados
+   del carrusel y aplicar el desvanecido en los bordes izq/der con un
+   mask-image, sin tocar el tamaño/forma de las tarjetas. */
+.carousel-wrap{ position:relative; }
+
+/* MODIFICADO: el mask-image del desvanecido va en el TRACK, no en el
+   wrapper — así los botones de flecha (hermanos del track dentro de
+   .carousel-wrap, ver .carousel-side-btn) quedan siempre a opacidad
+   completa en vez de comerse el fade de los bordes. */
+.carousel-track{
+  display:flex; gap:18px; overflow-x:auto; padding-bottom:6px; scrollbar-width:none; -ms-overflow-style:none;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
 .carousel-track::-webkit-scrollbar{ display:none; }
+/* MODIFICADO: el scroll-snap ya no está prendido todo el tiempo — antes
+   competía con el autoplay (scrollLeft += 0.45 en cada frame) y el
+   navegador snapeaba de vuelta en cada micro-paso, por eso no se veía
+   avanzar. Ahora TrustCarousel.jsx prende esta clase solo mientras el
+   usuario interactúa (hover/touch/flechas) y la quita cuando el autoplay
+   retoma. */
+.carousel-track.is-snapping{ scroll-snap-type:x mandatory; }
 .app-card{ scroll-snap-align:start; flex:0 0 auto; width:78%; max-width:270px; border-radius:16px; border:1px solid var(--border-soft); border-top-width:3px; overflow:hidden; background:var(--bg-card); transition:transform .4s var(--ease-soft), box-shadow .4s var(--ease-soft); }
 @media (min-width:640px){ .app-card{ width:44%; } }
 @media (min-width:1024px){ .app-card{ width:22.5%; } }
 .app-card:hover{ transform:translateY(-4px); box-shadow:0 22px 40px -26px rgba(22,36,63,.35); }
-.app-card__media{ position:relative; aspect-ratio:4/3; overflow:hidden; }
-.app-card__media img{ width:100%; height:100%; object-fit:cover; transition:transform .6s var(--ease-soft); }
+.app-card__media{ position:relative; aspect-ratio:4/3; overflow:hidden; background:linear-gradient(180deg, #F1F1EE, #E8E8E4); }
+/* MODIFICADO: object-fit:cover recortaba las fotos (se perdía parte de la
+   imagen); ahora es contain, con relleno interno + el fondo suave de
+   arriba, para que la imagen completa quepa bien dentro del MISMO
+   recuadro (que no cambió de tamaño ni forma). */
+.app-card__media img{ width:100%; height:100%; object-fit:contain; padding:14px; box-sizing:border-box; transition:transform .6s var(--ease-soft); }
 .app-card:hover .app-card__media img{ transform:scale(1.05); }
 .app-card__body{ padding:16px 16px 18px; display:flex; align-items:center; gap:10px; }
 .app-card__icon{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none; color:#fff; }
@@ -26,3 +48,27 @@
 .carousel-dots{ display:flex; gap:7px; justify-content:center; margin-top:22px; }
 .carousel-dots button{ width:7px; height:7px; border-radius:50%; background:var(--border-soft); transition:background-color .3s, width .3s; border:none; }
 .carousel-dots button.is-active{ background:var(--navy); width:20px; border-radius:4px; }
+
+/* MODIFICADO: nuevos botones de navegación del carrusel — antes eran
+   círculos con borde, colocados arriba junto al título. Ahora son flechas
+   simples "‹ ›" (sin círculo, sin fondo, sin borde) ancladas a los
+   costados del propio carrusel, centradas verticalmente sobre las
+   tarjetas. */
+.carousel-side-btn{
+  position:absolute; top:44%; z-index:5; transform:translateY(-50%);
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px;
+  color:var(--navy); background:none; border:none;
+  opacity:.55; transition:opacity .25s, transform .25s;
+}
+.carousel-side-btn:hover{ opacity:1; }
+.carousel-side-btn:active{ transform:translateY(-50%) scale(.92); }
+.carousel-side-btn svg{ width:22px; height:22px; display:block; }
+.carousel-side-btn--prev{ left:-6px; }
+.carousel-side-btn--next{ right:-6px; }
+@media (min-width:768px){
+  .carousel-side-btn{ width:38px; height:38px; }
+  .carousel-side-btn svg{ width:26px; height:26px; }
+  .carousel-side-btn--prev{ left:-14px; }
+  .carousel-side-btn--next{ right:-14px; }
+}

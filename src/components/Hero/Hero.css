@@ -68,9 +68,21 @@
   position:absolute; inset:0; pointer-events:none; overflow:hidden;
 }
 
-.hero__stage-wrap{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.hero__stage{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .8s var(--ease-soft); }
-.hero__stage.is-active{ opacity:1; pointer-events:auto; }
+.hero__stage-wrap{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+/* MODIFICADO: antes esto era un crossfade plano (solo opacity). Ahora el
+   stage saliente sube y desaparece por arriba, y el que entra sube desde
+   abajo — un "scroll hacia arriba" real en vez de desvanecer la sección
+   anterior y luego volver a aparecer. HeroVisual.jsx decide, para cada
+   stage, si es is-active / is-prev (el que se acaba de ir) / is-next (el
+   que sigue esperando abajo). */
+.hero__stage{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transform:translateY(38px);
+  transition:opacity .7s var(--ease-soft), transform .7s var(--ease-soft);
+}
+.hero__stage.is-active{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.hero__stage.is-prev{ opacity:0; transform:translateY(-38px); }
+.hero__stage.is-next{ opacity:0; transform:translateY(38px); }
 
 /* Ya no hay "tarjeta": las imágenes son PNG recortados (fondo transparente)
    que flotan directo sobre la sección, sin fondo/borde/sombra que las
@@ -78,7 +90,24 @@
 .stage-frame{
   position:relative; width:min(420px,86%);
 }
-.stage-frame img{ display:block; width:100%; height:auto; }
+/* MODIFICADO: antes solo se limitaba el ANCHO (width:100%, height:auto) y
+   se asumía que todas las fotos eran más anchas que altas. Las de
+   "Antecedentes penales" y "Estudio socioeconómico" son más altas que
+   anchas (retrato): a 420px de ancho terminaban más altas que el
+   .hero__visual (alto FIJO: 290/360/440px según breakpoint) y el
+   .hero{overflow:hidden} las recortaba por abajo.
+   Se agrega max-height (en px, uno por breakpoint, igual al alto de
+   .hero__visual) — en un <img> real esto SÍ recalcula el ancho junto con
+   el alto para mantener la proporción (a diferencia de un max-height en
+   %, que aquí no se puede resolver porque .stage-frame no tiene una
+   altura explícita). Como .stage-frame sigue sin alto fijo, su tamaño
+   sigue ajustándose exactamente al de la imagen ya escalada — por eso
+   esto NO afecta el overlay de la pantalla del laptop en Poligrafía
+   (.stage-frame__screen, calculado en % sobre este mismo cuadro): esa
+   imagen es horizontal y nunca llega a tocar el límite de alto. */
+.stage-frame img{ display:block; width:100%; height:auto; max-height:290px; }
+@media (min-width:640px){ .stage-frame img{ max-height:360px; } }
+@media (min-width:1200px){ .stage-frame img{ max-height:440px; } }
 
 /* Chip de servicio: posición FIJA, pegada al fondo de .hero__stage (tamaño
    ahora realmente constante), separada de la imagen a propósito — nunca
@@ -130,25 +159,75 @@
 }
 .eco-symbol svg{ display:block; width:100%; height:100%; }
 
-.verify-ring{
-  position:absolute; top:80%; left:50%; width:min(220px,42vw); aspect-ratio:1/1; transform:translate(-50%,-50%); border-radius:50%;
-  border:1.5px dashed color-mix(in srgb, var(--accent-antecedentes) 70%, transparent);
-  opacity:.6; animation:ringSpin 26s linear infinite;
+/* ---- MODIFICADO: 05 — Antecedentes penales ----
+   Antes había un anillo de "VERIFICANDO.../VERIFICADO" (verify-ring /
+   verify-status, ya no se usan pero se dejan documentados arriba en el
+   historial). Ahora es un escaneo de huella dactilar: la huella (PNG del
+   usuario, usada como máscara) aparece en una posición aleatoria de la
+   sección, una franja roja neón la escanea de arriba a abajo, y a su paso
+   la huella se "dibuja" en verde; al terminar, todo el grupo se desvanece
+   y RingAnimation.jsx la vuelve a lanzar en otra posición aleatoria. */
+.fp-scan-stage{
+  position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(ellipse 86% 80% at 50% 48%, #000 55%, transparent 100%);
 }
-@media (min-width:1200px){
-  .verify-ring{ top:50%; left:74%; width:min(300px,26vw); }
+
+.fp-scan{
+  --fp-red:#ff2d55;
+  --fp-green:#22c55e;
+  position:absolute; width:var(--fp-size,96px); height:calc(var(--fp-size,96px) * 1.4);
+  transform:translate(-50%,-50%);
+  opacity:0;
 }
-@keyframes ringSpin{ from{ transform:translate(-50%,-50%) rotate(0deg); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
-.verify-status{
-  position:absolute; top:calc(80% + min(220px,42vw) / 2 + 14px); left:50%; transform:translateX(-50%);
-  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; font-family:var(--font-mono);
-  color:var(--accent-antecedentes); transition:color .4s ease;
+.fp-scan.is-running{ animation:fpGroupFade 4.2s ease-in-out forwards; }
+.fp-scan.is-static{ opacity:1; }
+
+.fp-scan__base, .fp-scan__green{
+  position:absolute; inset:0;
+  -webkit-mask-image:var(--fp-mask); mask-image:var(--fp-mask);
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
 }
-@media (min-width:1200px){
-  .verify-status{ top:calc(50% + min(300px,26vw) / 2 + 14px); left:74%; }
+.fp-scan__base{ background:#8b95a1; opacity:.3; }
+.fp-scan__green{
+  background:var(--fp-green); opacity:0;
+  clip-path:inset(0 0 100% 0);
+  filter:drop-shadow(0 0 6px color-mix(in srgb, var(--fp-green) 65%, transparent));
 }
-.verify-status.is-verified{ color:var(--brand-green); }
+.fp-scan.is-running .fp-scan__green{ animation:fpGreenReveal 4.2s ease-in-out forwards; }
+.fp-scan.is-static .fp-scan__green{ opacity:1; clip-path:inset(0 0 0% 0); }
+
+.fp-scan__line{
+  position:absolute; left:-10%; right:-10%; top:0; height:3px; opacity:0;
+  background:linear-gradient(90deg, transparent, var(--fp-red) 20%, var(--fp-red) 80%, transparent);
+  box-shadow:0 0 10px 2px color-mix(in srgb, var(--fp-red) 80%, transparent), 0 0 22px 6px color-mix(in srgb, var(--fp-red) 40%, transparent);
+}
+.fp-scan.is-running .fp-scan__line{ animation:fpLineMove 4.2s ease-in-out forwards; }
+
+@keyframes fpGroupFade{
+  0%{ opacity:0; }
+  5%{ opacity:1; }     /* aparece casi de inmediato, no gradual */
+  72%{ opacity:1; }
+  100%{ opacity:0; }   /* se desvanece completa (base + verde + línea) junta, no queda "pegada" */
+}
+@keyframes fpGreenReveal{
+  0%{ opacity:0; clip-path:inset(0 0 100% 0); }
+  6%{ opacity:1; clip-path:inset(0 0 100% 0); }
+  46%{ opacity:1; clip-path:inset(0 0 0% 0); } /* huella "dibujada" en verde de arriba a abajo, sincronizada con la línea */
+  100%{ opacity:1; clip-path:inset(0 0 0% 0); }
+}
+@keyframes fpLineMove{
+  0%{ opacity:0; top:0%; }
+  6%{ opacity:1; top:0%; }
+  46%{ opacity:1; top:100%; }
+  54%{ opacity:0; top:100%; }
+  100%{ opacity:0; top:100%; }
+}
 
 @media (prefers-reduced-motion:reduce){
-  .verify-ring{ animation:none !important; }
+  .fp-scan.is-running{ animation:none !important; opacity:1; }
+  .fp-scan.is-running .fp-scan__green{ animation:none !important; opacity:1; clip-path:inset(0 0 0% 0); }
+  .fp-scan.is-running .fp-scan__line{ animation:none !important; opacity:0; }
 }
