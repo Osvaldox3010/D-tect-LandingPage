@@ -1,5 +1,6 @@
 import { Eyebrow } from '../ui/Eyebrow';
 import { ContactForm } from '../ContactForm/ContactForm';
+import { MapView } from './MapView';
 import './Contact.css';
 
 const METHODS = [
@@ -58,14 +59,14 @@ export function Contact() {
           </div>
 
           <div className="contact__map-wrap">
+            {/* MODIFICADO: antes era un fondo falso (líneas de CSS
+                simulando una cuadrícula) con un pin decorativo estático.
+                Ahora .map-card contiene un mapa real (MapView, MapLibre
+                GL) de fondo; la etiqueta y la tarjeta de dirección se
+                quedan igual, superpuestas encima. */}
             <div className="map-card">
+              <MapView />
               <span className="map-card__label">Nuestra ubicación</span>
-              <span className="map-card__pin" tabIndex={0} role="button" aria-label="Ver ubicación">
-                <svg viewBox="0 0 24 30" fill="none" aria-hidden="true">
-                  <path d="M12 29C12 29 22 18 22 11C22 5.5 17.5 1 12 1C6.5 1 2 5.5 2 11C2 18 12 29 12 29Z" fill="currentColor" />
-                  <circle cx="12" cy="11" r="4" fill="var(--bg-base)" />
-                </svg>
-              </span>
               <div className="map-card__addr">
                 <strong>D-TECT — Oficina Central</strong>
                 Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000
