@@ -5,11 +5,25 @@
 .contact__head p{ margin-top:14px; color:var(--text-gray); font-size:16px; }
 
 .contact__grid{ display:flex; flex-direction:column; gap:44px; }
+/* MODIFICADO: en PC ya no es una fila de 3 columnas (métodos | formulario |
+   mapa) — ahora es una grid de 2 columnas: a la izquierda métodos de
+   contacto arriba y el mapa debajo (ocupando el mismo ancho que los
+   métodos), a la derecha el formulario ocupando toda esa altura. En
+   móvil/tablet no se tocó nada — sigue siendo la columna simple de abajo
+   (métodos, formulario, mapa) tal cual estaba, porque ese orden ya
+   funcionaba bien. */
 @media (min-width:1024px){
-  .contact__grid{ flex-direction:row; align-items:flex-start; }
-  .contact__methods{ width:24%; flex:none; }
-  .contact__form-wrap{ flex:1; }
-  .contact__map-wrap{ width:30%; flex:none; }
+  .contact__grid{
+    display:grid;
+    grid-template-columns:38% 1fr;
+    grid-template-rows:auto 1fr;
+    column-gap:56px;
+    row-gap:32px;
+    align-items:start;
+  }
+  .contact__methods{ grid-column:1; grid-row:1; }
+  .contact__map-wrap{ grid-column:1; grid-row:2; width:auto; }
+  .contact__form-wrap{ grid-column:2; grid-row:1 / span 2; width:auto; }
 }
 
 .contact-method{ display:flex; align-items:center; gap:14px; padding:16px 0; border-bottom:1px solid var(--border-soft); }

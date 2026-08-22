@@ -1,0 +1,101 @@
+/* AudienceSections — Para empresas / Para personas / Para organizaciones.
+   Port directo del HTML/CSS que ya se aprobó, con las clases renombradas
+   (prefijo aud-) para no chocar con el resto del sitio, y usando los
+   tokens de diseño (--brand-red, --navy, etc.) donde tiene sentido. Los
+   colores de los tres temas (azul/dorado/rojo) y el patrón de puntos se
+   dejaron tal cual, sin cambios de fondo — lo único NUEVO aquí es la
+   integración con el scroll-reveal (ver reveal-img/reveal-up, aplicadas
+   desde AudienceSections.jsx) y los medallones de huella/escudo (ver los
+   comentarios "MODIFICADO" en AudienceSections.jsx). */
+
+.aud-wrap{ background:var(--bg-card); }
+
+.aud-row{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:340px;
+  background:#fff;
+}
+.aud-row--reverse .aud-visual{ order:2; }
+.aud-row--reverse .aud-content{ order:1; }
+
+.aud-visual{ position:relative; overflow:hidden; isolation:isolate; }
+/* recorte diagonal del panel de color, cortando de abajo-izquierda hacia
+   arriba-derecha para revelar la tarjeta blanca detrás */
+.aud-row .aud-visual{ clip-path:polygon(0 0, 58% 0, 88% 100%, 0 100%); }
+.aud-row--reverse .aud-visual{ clip-path:polygon(42% 0, 100% 0, 100% 100%, 12% 100%); }
+
+.aud-theme-blue{ background:linear-gradient(135deg, #1c2b52 0%, #2a3d6e 45%, #16203c 100%); }
+.aud-theme-gold{ background:linear-gradient(135deg, #d9a441 0%, #e8bd63 45%, #b9832a 100%); }
+.aud-theme-red{ background:linear-gradient(135deg, #a4291f 0%, #c0392f 45%, #7a1c17 100%); }
+
+/* patrón sutil de puntos, coincide con la textura de referencia */
+.aud-pattern{
+  position:absolute; inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.18) 1px, transparent 1.4px);
+  background-size:16px 16px;
+  mix-blend-mode:overlay;
+  opacity:.5;
+}
+/* barras ascendentes tenues, eco del motivo de analítica */
+.aud-bars{ position:absolute; left:6%; bottom:0; display:flex; align-items:flex-end; gap:10px; height:55%; }
+.aud-row--reverse .aud-bars{ left:auto; right:6%; }
+.aud-bars span{ display:block; width:14px; background:#fff; border-radius:2px 2px 0 0; }
+
+/* medallón con el ícono, sentado sobre la costura diagonal.
+   Vive directo dentro de .aud-row (no de .aud-visual), así el clip-path
+   diagonal no lo recorta, y puede tener tamaño de sobra mientras se
+   renderiza completo por encima de ambos paneles. */
+.aud-medallion{
+  position:absolute; top:50%; width:210px; height:210px;
+  background:#fff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 18px 40px rgba(0,0,0,.22);
+  z-index:10;
+}
+.aud-row .aud-medallion{ left:36.5%; transform:translate(-50%,-50%); }
+.aud-row--reverse .aud-medallion{ left:63.5%; transform:translate(-50%,-50%); }
+.aud-medallion svg{ width:112px; height:112px; }
+/* MODIFICADO: tamaño equivalente para los medallones basados en imagen
+   (huella y escudo) — mismo espacio visual que ocupaban los SVG. */
+.aud-medallion__img{ width:112px; height:112px; object-fit:contain; }
+.aud-medallion__fp{
+  display:block; width:96px; height:96px;
+  background:#b9832a;
+  -webkit-mask-image:var(--fp-mask); mask-image:var(--fp-mask);
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+}
+
+.aud-content{ display:flex; flex-direction:column; justify-content:center; padding:56px 60px; gap:14px; }
+.aud-row--reverse .aud-content{ align-items:flex-start; }
+
+.aud-eyebrow{ font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--text-gray); }
+.aud-h2{ margin:0; font-family:var(--font-display); font-size:32px; line-height:1.25; font-weight:800; color:var(--navy); }
+.aud-accent{ transition:color .3s; }
+
+.aud-desc{ margin:0; font-size:15px; line-height:1.6; color:var(--text-gray); max-width:440px; }
+
+.aud-checks{ list-style:none; margin:4px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.aud-checks li{ font-size:14px; color:var(--row-checks, #374151); display:flex; align-items:center; gap:8px; }
+.aud-checks li::before{
+  content:"";
+  width:14px; height:14px; flex:0 0 auto;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z'/></svg>") no-repeat center / contain;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z'/></svg>") no-repeat center / contain;
+}
+
+.aud-cta{ margin-top:8px; display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--navy); text-decoration:none; }
+.aud-cta svg{ width:16px; height:16px; transition:transform .3s var(--ease-soft); }
+.aud-cta:hover{ text-decoration:underline; color:var(--brand-red); }
+.aud-cta:hover svg{ transform:translateX(4px); }
+
+@media (max-width:760px){
+  .aud-row, .aud-row--reverse{ grid-template-columns:1fr; }
+  .aud-row .aud-visual, .aud-row--reverse .aud-visual{ order:1; min-height:220px; clip-path:none; }
+  .aud-row .aud-content, .aud-row--reverse .aud-content{ order:2; padding:32px 24px; }
+  .aud-medallion{ display:none; }
+}
