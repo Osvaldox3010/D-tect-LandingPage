@@ -1,5 +1,5 @@
-.differentiators{ padding:70px 0; background:var(--bg-card); border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
-@media (min-width:1200px){ .differentiators{ padding:100px 0; } }
+.differentiators{ padding:50px 0; background:var(--bg-card); border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
+@media (min-width:1200px){ .differentiators{ padding:40px 0; } }
 .differentiators__head{ text-align:center; margin-bottom:48px; }
 .differentiators__head h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(27px,4.8vw,38px); }
 .differentiators__head .eyebrow{ justify-content:center; margin-bottom:14px; }

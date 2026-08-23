@@ -1,5 +1,5 @@
-.faq{ padding:70px 0; }
-@media (min-width:1200px){ .faq{ padding:100px 0; } }
+.faq{ padding:40px 0; }
+@media (min-width:1200px){ .faq{ padding:50px 0; } }
 .faq__grid{ display:flex; flex-direction:column; gap:36px; }
 @media (min-width:1024px){ .faq__grid{ flex-direction:row; gap:60px; } .faq__intro{ width:34%; flex:none; } .faq__list{ flex:1; } }
 .faq__intro h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(27px,4.8vw,36px); line-height:1.15; }

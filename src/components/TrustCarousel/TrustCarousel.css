@@ -1,5 +1,5 @@
-.applications{ padding:64px 0 56px; }
-@media (min-width:1200px){ .applications{ padding:96px 0 76px; } }
+.applications{ padding:40px 0 56px; }
+@media (min-width:1200px){ .applications{ padding:56px 0 66px; } }
 .applications__head{ display:flex; flex-direction:column; gap:16px; margin-bottom:36px; }
 @media (min-width:1200px){ .applications__head{ flex-direction:row; justify-content:space-between; align-items:flex-end; } }
 .applications__title{ font-family:var(--font-display); font-weight:700; font-size:clamp(27px,4.8vw,38px); letter-spacing:-.01em; max-width:460px; }

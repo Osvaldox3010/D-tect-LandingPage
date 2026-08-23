@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { services } from '../../config/services.config';
+import { servicesCarousel  } from '../../config/services.config';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { Eyebrow } from '../ui/Eyebrow';
 import './TrustCarousel.css';
 
-const DOUBLED = [...services, ...services]; // set duplicado para el loop continuo
+const DOUBLED = [...servicesCarousel, ...servicesCarousel]; // set duplicado para el loop continuo
 
 export function TrustCarousel() {
   const trackRef = useRef(null);
@@ -55,9 +55,9 @@ export function TrustCarousel() {
 
     function onScroll() {
       let setWidth = 0;
-      for (let i = 0; i < services.length; i++) setWidth += track.children[i].offsetWidth + 18;
+      for (let i = 0; i < servicesCarousel .length; i++) setWidth += track.children[i].offsetWidth + 18;
       if (track.scrollLeft >= setWidth) track.scrollLeft -= setWidth;
-      const idx = Math.round((track.scrollLeft % setWidth) / (setWidth / services.length)) % services.length;
+      const idx = Math.round((track.scrollLeft % setWidth) / (setWidth / servicesCarousel .length)) % servicesCarousel .length;
       setActiveDot(idx);
     }
     track.addEventListener('scroll', onScroll, { passive: true });
@@ -149,7 +149,7 @@ export function TrustCarousel() {
           </div>
         </div>
         <div className="carousel-dots">
-          {services.map((svc, i) => (
+          {servicesCarousel .map((svc, i) => (
             <button
               key={svc.key}
               aria-label={`Ir a la tarjeta ${i + 1}`}

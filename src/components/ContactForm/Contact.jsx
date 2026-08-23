@@ -18,7 +18,7 @@ const METHODS = [
     />,
   },
   {
-    label: 'Llamadas', value: '55 6525 6934', href: 'tel:+525565256934',
+    label: 'Llamadas', value: '+52 55 6525 6934', href: 'tel:+525565256934',
     icon: <path d="M4 3H8L10 8L7.5 9.5C8.4 11.5 9.9 13 11.9 13.9L13.5 11.5L18.5 13.5V17.5C18.5 18.6 17.6 19.5 16.5 19.5C9.6 19 1 10.4 0.5 3.5C0.5 2.4 1.4 1.5 2.5 1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />,
   },
   {
@@ -26,6 +26,11 @@ const METHODS = [
     icon: <><rect x="2" y="4" width="16" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.4" /><path d="M3 5.5L10 11L17 5.5" stroke="currentColor" strokeWidth="1.4" /></>,
   },
 ];
+
+// TODO: reemplazar por la dirección real de la oficina cuando se tenga
+// definida — mientras tanto es un dato de ejemplo (ver MapView.jsx).
+const OFFICE_ADDRESS = 'Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000';
+const OFFICE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE_ADDRESS)}`;
 
 export function Contact() {
   return (
@@ -59,17 +64,28 @@ export function Contact() {
           </div>
 
           <div className="contact__map-wrap">
-            {/* MODIFICADO: antes era un fondo falso (líneas de CSS
-                simulando una cuadrícula) con un pin decorativo estático.
-                Ahora .map-card contiene un mapa real (MapView, MapLibre
-                GL) de fondo; la etiqueta y la tarjeta de dirección se
-                quedan igual, superpuestas encima. */}
+            {/* MODIFICADO: MapView vuelve a ser un mapa real e interactivo
+                (MapLibre GL + calles reales), pero ahora recoloreado con
+                la paleta de la marca y con manejo de error/carga, en vez
+                de dejar los tiles tal cual venían o mostrar una tarjeta
+                en blanco si la petición fallaba. La tarjeta ya no es un
+                link completo (así se puede arrastrar/hacer zoom al mapa
+                sin salir de la página); el link a Google Maps queda
+                dentro de la dirección. */}
             <div className="map-card">
               <MapView />
               <span className="map-card__label">Nuestra ubicación</span>
               <div className="map-card__addr">
                 <strong>D-TECT — Oficina Central</strong>
-                Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000
+                <span>{OFFICE_ADDRESS}</span>
+                <a
+                  className="map-card__addr-link"
+                  href={OFFICE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Cómo llegar ↗
+                </a>
               </div>
             </div>
           </div>
