@@ -51,7 +51,7 @@ function makeDot(W, H) {
     phase_: rand(0, Math.PI * 2),
     wig: rand(6, 12),
     progress: 0,
-    baseAlpha: rand(0.3, 0.6),
+    baseAlpha: rand(0.45, 0.78),
   };
 }
 
@@ -351,8 +351,8 @@ export function NodesAnimation() {
         const detailShrink = d.isDetail ? (1 - 0.45 * g) : 1;
         const radius = (d.r + g * 1.4) * detailShrink;
         ctx.beginPath();
-        ctx.fillStyle = `hsla(${d.hue}, 52%, ${38 + g * 14}%, ${alpha})`;
-        if (g > 0.05) { ctx.shadowColor = `hsla(${d.hue},65%,42%,${g})`; ctx.shadowBlur = 7 * g; }
+        ctx.fillStyle = `hsla(${d.hue}, 62%, ${52 + g * 16}%, ${alpha})`;
+        if (g > 0.05) { ctx.shadowColor = `hsla(${d.hue},70%,58%,${g})`; ctx.shadowBlur = 7 * g; }
         else { ctx.shadowBlur = 0; }
         ctx.arc(d.x, d.y, Math.max(0, radius), 0, Math.PI * 2);
         ctx.fill();

@@ -1,9 +1,17 @@
 import { useEffect, useRef } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+// El worker de MapLibre debe cargarse como un chunk propio (self-contained),
+// no inline dentro del bundle minificado principal: cuando Vite/Rollup
+// minifica todo junto, los nombres de variable del worker chocan con los
+// del resto del bundle y el mapa queda en blanco SOLO en producción (en
+// dev cada módulo se sirve por separado, por eso ahí sí funciona).
+// `?worker&url` hace que Vite empaquete este archivo aparte y nos dé su URL
+// final ya con hash, en vez de inlinearlo.
 import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 
 maplibregl.setWorkerUrl(maplibreWorkerUrl);
+
 /**
  * NUEVO: mapa real (antes .map-card era un fondo falso dibujado con
  * CSS — líneas repetidas simulando una cuadrícula). Se pidió usar
@@ -27,7 +35,6 @@ maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron';
 
-console.log('MAPLIBRE:', maplibregl);
 // Coordenadas de ejemplo (Centro, Ciudad de México) — ajustar a la
 // ubicación real de la oficina cuando se tenga la dirección definitiva.
 const OFFICE = { lng: -99.1419, lat: 19.4352 };
@@ -37,21 +44,8 @@ export function MapView({ zoom = 15.4 }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    console.log('1. MapView iniciado');
-    console.log('2. Container:', containerRef.current);
-    console.log('3. MapLibre:', maplibregl);
-
     if (!containerRef.current || mapRef.current) return;
 
-    console.log('4. Creando mapa...');
-    // const map = new maplibregl.Map({
-    //   container: containerRef.current,
-    //   style: MAP_STYLE,
-    //   center: [OFFICE.lng, OFFICE.lat],
-    //   zoom,
-    //   attributionControl: false,
-    //   cooperativeGestures: true, // requiere Ctrl/⌘ + scroll para hacer zoom, para no "atrapar" el scroll de la página
-    // });
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: MAP_STYLE,
@@ -62,26 +56,9 @@ export function MapView({ zoom = 15.4 }) {
     });
     mapRef.current = map;
 
-    console.log('5. Mapa creado');
-
-    map.on('style.load', () => {
-      console.log('ESTILO CARGADO');
-    });
-
-    map.on('data', (event) => {
-      if (event.dataType === 'style') {
-        console.log('STYLE DATA:', event);
-      }
-    });
-
-    map.on('load', () => {
-      console.log('6. MAPA CARGADO CORRECTAMENTE');
-    });
-
     map.on('error', (event) => {
       console.error('MAPLIBRE ERROR:', event);
     });
-
 
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
@@ -99,7 +76,6 @@ export function MapView({ zoom = 15.4 }) {
       .addTo(map);
 
     return () => {
-      console.log('7. Destruyendo mapa');
       map.remove();
       mapRef.current = null;
     };

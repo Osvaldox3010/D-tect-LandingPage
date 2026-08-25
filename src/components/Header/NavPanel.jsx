@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 const LINKS = [
   { href: '#inicio', label: 'Inicio' },
@@ -19,11 +20,14 @@ export function NavPanel({ isOpen, onClose, onOpenModal }) {
     <div className={`nav-panel ${isOpen ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Menú de navegación">
       <div className="nav-panel__top">
         <Logo />
-        <button className="nav-panel__close" onClick={onClose} aria-label="Cerrar menú">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
+        <div className="nav-panel__top-actions">
+          <ThemeToggle />
+          <button className="nav-panel__close" onClick={onClose} aria-label="Cerrar menú">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
       </div>
       <div className="nav-panel__body">
         <svg className="nav-panel__wave" viewBox="0 0 400 60" preserveAspectRatio="none" fill="none" aria-hidden="true">

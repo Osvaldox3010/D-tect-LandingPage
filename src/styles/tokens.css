@@ -9,6 +9,13 @@
   --text-gray:#6B7280;
   --border-soft:#E5E5E2;
 
+  /* Encabezados / texto principal — separado de --navy (que también se usa
+     como color de fondo en botones, footer, etc.) para poder invertirlo en
+     modo oscuro sin romper esos fondos. */
+  --text-heading:var(--navy);
+  --header-bg:rgba(247,247,245,.86);
+  color-scheme:light;
+
   /* 2.2 Acentos por servicio (rotan con el Hero) */
   --accent-poligrafia:#1B3358;
   --accent-toxicologia:#2F7A76;
@@ -38,3 +45,30 @@
 
 @media (min-width:768px){ :root{ --pad:40px; } }
 @media (min-width:1200px){ :root{ --pad:64px; } }
+
+/* ---- Modo oscuro ----
+   Se activa con [data-theme="dark"] en <html> (ver ThemeToggle). Reusa el
+   navy del footer (--navy / --navy-deep) como superficie base, así el
+   sitio en oscuro se siente igual de "marca" que el footer actual. */
+:root[data-theme="dark"]{
+  --bg-base:var(--navy-deep);
+  --bg-card:var(--navy);
+  --text-heading:#F2F4F8;
+  --text-gray:#9AA7BC;
+  --border-soft:rgba(255,255,255,.14);
+  --header-bg:rgba(13,24,38,.86);
+  color-scheme:dark;
+
+  /* Acentos por servicio, subidos de brillo para modo oscuro. Los
+     originales (2.2, arriba) son tonos oscuros pensados para leerse SOBRE
+     fondo claro; el Hero en modo oscuro tiene un fondo ya oscuro (--bg-base
+     = --navy-deep) y con esos mismos tonos el chip, el nombre del servicio
+     junto al botón de pausa, y el punto activo del indicador casi
+     desaparecen por falta de contraste. Estas versiones son las mismas
+     familias de color pero más claras/saturadas, solo para modo oscuro. */
+  --accent-poligrafia:#5B8DEF;
+  --accent-toxicologia:#3FCFC0;
+  --accent-psicometria:#9C9FF2;
+  --accent-socioeconomico:#E8BD63;
+  --accent-antecedentes:#FF6E62;
+}

@@ -5,14 +5,23 @@ html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
 body{
   margin:0;
   background:var(--bg-base);
-  color:var(--navy);
+  color:var(--text-heading);
   font-family:var(--font-body);
   font-size:16px;
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+  transition:background-color .35s var(--ease-soft), color .35s var(--ease-soft);
 }
 body.no-scroll{ overflow:hidden; }
+
+/* Transición suave al alternar tema en las superficies principales — solo
+   fondo/borde/texto de los contenedores que cambian entre claro y oscuro
+   (animar todo el árbol sería costoso). */
+.site-header, section, .field input, .field textarea,
+.app-card, .diff-item, .form-success, .modal, .contact-method__icon{
+  transition:background-color .35s var(--ease-soft), border-color .35s var(--ease-soft), color .35s var(--ease-soft);
+}
 
 img,svg,canvas{ display:block; max-width:100%; }
 a{ color:inherit; text-decoration:none; }
@@ -34,7 +43,7 @@ h1,h2,h3,h4,p{ margin:0; }
   align-items:center;
   gap:8px;
 }
-.eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--navy); flex:none; }
+.eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--text-heading); flex:none; }
 
 .visually-hidden{
   position:absolute !important; width:1px; height:1px;

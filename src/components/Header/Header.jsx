@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Logo } from './Logo';
 import { NavPanel } from './NavPanel';
 import { Button } from '../ui/Button';
+import { ThemeToggle } from '../ui/ThemeToggle';
 import './Header.css';
 
 const LINKS = [
@@ -53,6 +54,7 @@ export function Header({ onOpenModal }) {
           </nav>
 
           <div className="header-right">
+            <ThemeToggle />
             <Button className="header-cta" onClick={() => onOpenModal('info')}>
               Solicitar información
             </Button>

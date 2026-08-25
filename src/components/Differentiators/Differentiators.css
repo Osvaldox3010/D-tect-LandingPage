@@ -8,7 +8,7 @@
 @media (min-width:1024px){ .diff-grid{ grid-template-columns:repeat(4,1fr); } }
 .diff-item{ background:var(--bg-card); padding:28px 22px; transition:transform .35s var(--ease-soft), background-color .35s; }
 .diff-item:hover{ transform:translateY(-3px); background:var(--bg-base); }
-.diff-item__icon{ width:36px; height:36px; color:var(--navy); margin-bottom:16px; }
+.diff-item__icon{ width:36px; height:36px; color:var(--text-heading); margin-bottom:16px; }
 .diff-item h3{ font-weight:700; font-size:15.5px; margin-bottom:8px; transition:color .3s; }
 .diff-item:hover h3{ color:var(--brand-red); }
 .diff-item p{ font-size:13.6px; color:var(--text-gray); line-height:1.5; }

@@ -1,8 +1,8 @@
 .field{ margin-bottom:18px; }
-.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--navy); }
+.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--text-heading); }
 .field input, .field textarea{
   width:100%; padding:13px 16px; min-height:50px; background:var(--bg-card);
-  border:1px solid var(--border-soft); border-radius:8px; color:var(--navy);
+  border:1px solid var(--border-soft); border-radius:8px; color:var(--text-heading);
   transition:border-color .3s var(--ease-soft), box-shadow .3s var(--ease-soft);
 }
 .field textarea{ min-height:118px; resize:vertical; }

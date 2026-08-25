@@ -11,7 +11,7 @@
 .service__title .accent{ color:var(--brand-red); }
 .service__desc{ margin-top:16px; color:var(--text-gray); max-width:400px; font-size:15.5px; line-height:1.6; }
 .service__list{ margin-top:18px; display:flex; flex-direction:column; gap:9px; }
-.service__list li{ display:flex; align-items:center; gap:9px; font-size:14px; color:var(--navy); }
+.service__list li{ display:flex; align-items:center; gap:9px; font-size:14px; color:var(--text-heading); }
 .service__list li svg{ width:14px; height:14px; color:var(--brand-green); flex:none; }
 .service__cta{ margin-top:24px; display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:14.5px; }
 .service__cta svg{ transition:transform .3s var(--ease-soft); width:14px; height:14px; }

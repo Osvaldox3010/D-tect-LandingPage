@@ -47,7 +47,7 @@
 
 .carousel-dots{ display:flex; gap:7px; justify-content:center; margin-top:22px; }
 .carousel-dots button{ width:7px; height:7px; border-radius:50%; background:var(--border-soft); transition:background-color .3s, width .3s; border:none; }
-.carousel-dots button.is-active{ background:var(--navy); width:20px; border-radius:4px; }
+.carousel-dots button.is-active{ background:var(--text-heading); width:20px; border-radius:4px; }
 
 /* MODIFICADO: nuevos botones de navegación del carrusel — antes eran
    círculos con borde, colocados arriba junto al título. Ahora son flechas
@@ -58,7 +58,7 @@
   position:absolute; top:44%; z-index:5; transform:translateY(-50%);
   display:flex; align-items:center; justify-content:center;
   width:32px; height:32px;
-  color:var(--navy); background:none; border:none;
+  color:var(--text-heading); background:none; border:none;
   opacity:.55; transition:opacity .25s, transform .25s;
 }
 .carousel-side-btn:hover{ opacity:1; }
