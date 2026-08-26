@@ -35,6 +35,19 @@
 .contact-method__value{ font-weight:700; font-size:14.5px; margin-top:2px; display:block; }
 .contact-method:hover .contact-method__icon{ color:var(--brand-red); border-color:var(--brand-red); background:rgba(193,68,58,.06); }
 
+/* ---- WhatsApp con varios números — mismo layout icono-izquierda /
+   texto-derecha que Llamadas y Correo, solo que el bloque de la derecha
+   trae el label arriba y los 3 números apilados debajo (no en una sola
+   columna suelta). ---- */
+.contact-method__multi{ display:flex; flex-direction:row; align-items:flex-start; gap:14px; width:100%; }
+.contact-method__multi .contact-method__icon{ flex-shrink:0; }
+.contact-method__multi-body{ display:flex; flex-direction:column; min-width:0; }
+.contact-method__numbers{ display:flex; flex-direction:column; gap:2px; margin-top:2px; }
+.contact-method__numbers .contact-method__value{ margin-top:0; transition:color .25s var(--ease-soft); }
+.contact-method__numbers .contact-method__value:focus-visible{ outline:2px solid var(--brand-red); outline-offset:2px; border-radius:3px; }
+.contact-method__numbers .contact-method__value:hover{ color:var(--brand-red); text-decoration:underline; }
+.contact-method:has(.contact-method__multi):hover .contact-method__icon{ color:var(--text-heading); border-color:var(--border-soft); background:none; }
+
 /* MODIFICADO: antes .map-card dibujaba una cuadrícula falsa con
    gradientes de CSS a modo de "mapa". Ahora contiene un mapa real
    (MapView, ver MapView.jsx) de fondo — se quitó el gradiente/cuadrícula

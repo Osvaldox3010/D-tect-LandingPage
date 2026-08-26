@@ -74,6 +74,7 @@ export const servicesCarousel = [
     accentVar: '--accent-poligrafia',
     anim: 'pulse',
     image: polygraphCompleteImg,
+    detail: 'Pruebas de verificación de veracidad para procesos de pre-empleo, rutina/permanencia o investigaciones específicas.',
   },
   {
     id: 2,
@@ -84,6 +85,7 @@ export const servicesCarousel = [
     accentVar: '--accent-toxicologia',
     anim: 'bubbles',
     image: toxicologyImg,
+    detail: 'Análisis de muestras biológicas (orina) para identificar el consumo de sustancias ilícitas.',
   },
   {
     id: 3,
@@ -94,6 +96,7 @@ export const servicesCarousel = [
     accentVar: '--accent-psicometria',
     anim: 'nodes',
     image: psychometryImg,
+    detail: 'Evaluaciones psicométricas y técnicas orientadas a medir el nivel de honestidad, lealtad y apego a normas del personal.',
   },
   {
     id: 4,
@@ -104,6 +107,7 @@ export const servicesCarousel = [
     accentVar: '--accent-socioeconomico',
     anim: 'eco',
     image: socioeconomicImg,
+    detail: 'Análisis socioeconómico y de antecedentes para validar la trayectoria e integridad patrimonial del candidato (Estudios de Riesgo Laboral).',
   },
   {
     id: 5,
@@ -114,6 +118,7 @@ export const servicesCarousel = [
     accentVar: '--accent-antecedentes',
     anim: 'ring',
     image: backgroundCheckImg,
+    detail: 'Consulta de antecedentes legales y judiciales (Investigación judicial).',
   },
 ];
 

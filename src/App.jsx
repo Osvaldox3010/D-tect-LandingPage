@@ -83,15 +83,18 @@ import { Hero } from './components/Hero/Hero';
 import { SignalDivider } from './components/SignalDivider/SignalDivider';
 import { TrustCarousel } from './components/TrustCarousel/TrustCarousel';
 import { AudienceSections } from './components/AudienceSections/AudienceSections';
+import { Methodology } from './components/Methodology/Methodology';
 import { Differentiators } from './components/Differentiators/Differentiators';
 import { FAQ } from './components/FAQ/FAQ';
 import { Contact } from './components/ContactForm/Contact';
 import { Footer } from './components/Footer/Footer';
 import { InfoModal } from './components/Modal/InfoModal';
 import { VideoModal } from './components/Modal/VideoModal';
+import { ServiceModal } from './components/Modal/ServiceModal';
 
 export default function App() {
   const [openModal, setOpenModal] = useState(null); // null | 'info' | 'video'
+  const [activeService, setActiveService] = useState(null); // svc | null — detalle del carrusel
 
   return (
     <>
@@ -100,16 +103,19 @@ export default function App() {
       <main>
         <Hero onOpenModal={setOpenModal} />
         <SignalDivider />
-        <TrustCarousel />
+        <TrustCarousel onOpenService={setActiveService} />
 
-        {/* MODIFICADO: los tres <ServiceSection /> (empresas/personas/
-            organizaciones) se reemplazaron por <AudienceSections />, el
-            diseño de paneles diagonales con medallón (huella real y
-            escudo re-coloreado) que se aprobó — mismo scroll-reveal que
-            el resto del sitio, ver AudienceSections.jsx. */}
+        {/* Catálogo oficial de 6 servicios (texto de la propuesta del
+            cliente) — antes de los paneles por audiencia. */}
+        {/* <ServicesTable /> */}
+
         <section id="servicios">
           <AudienceSections />
         </section>
+
+        {/* Metodología del polígrafo + tablas de resultado/riesgo,
+            también tomadas de la propuesta oficial. */}
+        <Methodology />
 
         <Differentiators />
         <FAQ />
@@ -120,6 +126,11 @@ export default function App() {
 
       <InfoModal isOpen={openModal === 'info'} onClose={() => setOpenModal(null)} />
       <VideoModal isOpen={openModal === 'video'} onClose={() => setOpenModal(null)} />
+      <ServiceModal
+        service={activeService}
+        onClose={() => setActiveService(null)}
+        onRequestInfo={() => { setActiveService(null); setOpenModal('info'); }}
+      /> 
     </>
   );
 }

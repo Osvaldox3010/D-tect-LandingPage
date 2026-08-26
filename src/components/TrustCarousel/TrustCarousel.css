@@ -29,11 +29,18 @@
    usuario interactúa (hover/touch/flechas) y la quita cuando el autoplay
    retoma. */
 .carousel-track.is-snapping{ scroll-snap-type:x mandatory; }
-.app-card{ scroll-snap-align:start; flex:0 0 auto; width:78%; max-width:270px; border-radius:16px; border:1px solid var(--border-soft); border-top-width:3px; overflow:hidden; background:var(--bg-card); transition:transform .4s var(--ease-soft), box-shadow .4s var(--ease-soft); }
+.app-card{ scroll-snap-align:start; flex:0 0 auto; width:78%; max-width:270px; border-radius:16px; border:1px solid var(--border-soft); border-top-width:3px; overflow:hidden; background:var(--bg-card); transition:transform .4s var(--ease-soft), box-shadow .4s var(--ease-soft); cursor:pointer; }
 @media (min-width:640px){ .app-card{ width:44%; } }
 @media (min-width:1024px){ .app-card{ width:22.5%; } }
-.app-card:hover{ transform:translateY(-4px); box-shadow:0 22px 40px -26px rgba(22,36,63,.35); }
+.app-card:hover, .app-card:focus-visible{ transform:translateY(-4px); box-shadow:0 22px 40px -26px rgba(22,36,63,.35); outline:none; }
+.app-card:focus-visible{ box-shadow:0 22px 40px -26px rgba(22,36,63,.35), 0 0 0 2px var(--brand-red); }
 .app-card__media{ position:relative; aspect-ratio:4/3; overflow:hidden; background:linear-gradient(180deg, #F1F1EE, #E8E8E4); }
+.app-card__hint{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(13,24,38,.55); color:#fff; font-size:12.5px; font-weight:700;
+  opacity:0; transition:opacity .3s var(--ease-soft); pointer-events:none;
+}
+.app-card:hover .app-card__hint, .app-card:focus-visible .app-card__hint{ opacity:1; }
 /* MODIFICADO: object-fit:cover recortaba las fotos (se perdía parte de la
    imagen); ahora es contain, con relleno interno + el fondo suave de
    arriba, para que la imagen completa quepa bien dentro del MISMO

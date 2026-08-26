@@ -1,15 +1,13 @@
 import { Eyebrow } from '../ui/Eyebrow';
 import { ContactForm } from '../ContactForm/ContactForm';
 import { MapView } from './MapView';
+import { WHATSAPP_NUMBERS, waHref } from '../../config/contact.config';
 import './Contact.css';
 
 const METHODS = [
   {
     label: 'WhatsApp',
-    value: '55 6525 6934',
-    href: `https://wa.me/525565256934?text=${encodeURIComponent(
-      'Me gustaría solicitar más información.'
-    )}`,
+    numbers: WHATSAPP_NUMBERS.map((n) => ({ display: n.display, href: waHref(n.digits) })),
     icon: <path
       d="M4 17L5.1 13.3C4.3 12 3.9 10.5 3.9 9C3.9 4.6 7.5 1 12 1C16.4 1 20 4.6 20 9C20 13.4 16.4 17 12 17C10.6 17 9.3 16.6 8.1 15.9L4 17Z"
       stroke="currentColor"
@@ -37,7 +35,7 @@ export function Contact() {
     <section className="contact" id="contacto">
       <div className="container">
         <div className="contact__head">
-          <Eyebrow style={{ marginBottom: 16 }}>SEÑAL / 05</Eyebrow>
+          <Eyebrow style={{ marginBottom: 16 }}>SEÑAL / 06</Eyebrow>
           <h2>Hablemos</h2>
           <p>Estamos listos para ayudarte. Contáctanos por cualquiera de nuestros medios o envíanos un mensaje.</p>
         </div>
@@ -46,15 +44,33 @@ export function Contact() {
           <div className="contact__methods">
             {METHODS.map((m) => (
               <div className="contact-method" key={m.label}>
-                <a href={m.href} target={m.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
-                  <span className="contact-method__icon">
-                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">{m.icon}</svg>
-                  </span>
-                  <span>
-                    <span className="contact-method__label">{m.label}</span>
-                    <span className="contact-method__value">{m.value}</span>
-                  </span>
-                </a>
+                {m.numbers ? (
+                  <div className="contact-method__multi">
+                    <div className="contact-method__icon">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">{m.icon}</svg>
+                    </div>
+                    <div className="contact-method__multi-body">
+                      <span className="contact-method__label">{m.label}</span>
+                      <div className="contact-method__numbers">
+                        {m.numbers.map((n) => (
+                          <a key={n.display} href={n.href} target="_blank" rel="noopener" className="contact-method__value">
+                            {n.display}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <a href={m.href} target={m.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
+                    <span className="contact-method__icon">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">{m.icon}</svg>
+                    </span>
+                    <span>
+                      <span className="contact-method__label">{m.label}</span>
+                      <span className="contact-method__value">{m.value}</span>
+                    </span>
+                  </a>
+                )}
               </div>
             ))}
           </div>

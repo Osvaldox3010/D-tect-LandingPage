@@ -30,7 +30,7 @@ export function FAQ() {
     <section className="faq" id="faq">
       <div className="container faq__grid">
         <div className="faq__intro">
-          <Eyebrow style={{ marginBottom: 16 }}>SEÑAL / 04</Eyebrow>
+          <Eyebrow style={{ marginBottom: 16 }}>SEÑAL / 06</Eyebrow>
           <h2>Preguntas frecuentes</h2>
           <p>Resuelve tus dudas sobre nuestras evaluaciones y procesos.</p>
         </div>

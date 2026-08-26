@@ -43,7 +43,7 @@ h1,h2,h3,h4,p{ margin:0; }
   align-items:center;
   gap:8px;
 }
-.eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--text-heading); flex:none; }
+.eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--dot-color, var(--text-heading)); flex:none; }
 
 .visually-hidden{
   position:absolute !important; width:1px; height:1px;

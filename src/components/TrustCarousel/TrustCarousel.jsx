@@ -6,7 +6,7 @@ import './TrustCarousel.css';
 
 const DOUBLED = [...servicesCarousel, ...servicesCarousel]; // set duplicado para el loop continuo
 
-export function TrustCarousel() {
+export function TrustCarousel({ onOpenService }) {
   const trackRef = useRef(null);
   const [activeDot, setActiveDot] = useState(0);
   const interacting = useRef(false);
@@ -122,14 +122,22 @@ export function TrustCarousel() {
             className="carousel-track"
             ref={trackRef}
             tabIndex={0}
-            aria-label="Evaluaciones — desliza para ver más"
+            aria-label="Evaluaciones — desliza para ver más, presiona una para ver el detalle"
             onMouseEnter={pause}
             onMouseLeave={resumeSoon}
             onTouchStart={pause}
             onTouchEnd={resumeSoon}
           >
             {DOUBLED.map((svc, i) => (
-              <div className="app-card" key={`${svc.key}-${i}`} style={{ borderTopColor: `var(${svc.accentVar})` }}>
+              <div
+                className="app-card"
+                key={`${svc.key}-${i}`}
+                style={{ borderTopColor: `var(${svc.accentVar})` }}
+                role="button"
+                tabIndex={0}
+                onClick={() => onOpenService(svc)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenService(svc); } }}
+              >
                 {/* MODIFICADO: la imagen ahora usa object-fit:contain (más
                     un fondo suave dentro del recuadro) en vez de cover, para
                     que se vea completa dentro del recuadro en vez de
@@ -137,6 +145,7 @@ export function TrustCarousel() {
                     tamaño/forma, solo cómo se ajusta la imagen adentro. */}
                 <div className="app-card__media">
                   <img src={svc.image} alt={svc.name} loading="lazy" />
+                  <span className="app-card__hint">Ver detalle</span>
                 </div>
                 <div className="app-card__body">
                   <span className="app-card__icon" style={{ background: `var(${svc.accentVar})` }}>
