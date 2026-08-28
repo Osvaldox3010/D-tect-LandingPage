@@ -8,7 +8,7 @@ const EMAIL_RE = /.+@.+\..+/;
  * Formulario de contacto reutilizable. `compact` oculta el campo de
  * "evaluación de interés" (usado en el modal rápido de header/hero).
  * onSubmit recibe los datos ya validados; aquí se deja un stub que
- * llama a /functions/contact.js (ver INSTALL.md).
+ * llama a /functions/contact.js (ver INSTALL.md)
  */
 export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' }) {
   const [values, setValues] = useState({ name: '', email: '', phone: '', service: '', message: '' });
