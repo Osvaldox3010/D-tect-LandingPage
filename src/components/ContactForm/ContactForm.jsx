@@ -13,7 +13,8 @@ const EMAIL_RE = /.+@.+\..+/;
 export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' }) {
   const [values, setValues] = useState({ name: '', email: '', phone: '', service: '', message: '' });
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | loading | success
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [serverError, setServerError] = useState('');
 
   function update(field, value) {
     setValues((v) => ({ ...v, [field]: value }));
@@ -33,16 +34,21 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
     e.preventDefault();
     if (!validate()) return;
     setStatus('loading');
+    setServerError('');
     try {
-      // Reemplaza esta URL por tu Cloudflare Pages Function real (ver functions/contact.js)
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
-      }).catch(() => null); // no bloquear el UX si el endpoint aún no existe en desarrollo
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok === false) {
+        throw new Error(data.error || 'No se pudo enviar tu mensaje.');
+      }
       setStatus('success');
-    } catch {
-      setStatus('idle');
+    } catch (err) {
+      setServerError(err.message || 'No se pudo enviar tu mensaje. Intenta de nuevo en unos minutos.');
+      setStatus('error');
     }
   }
 
@@ -102,6 +108,12 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
         />
         <p className="field__error">Cuéntanos brevemente tu caso.</p>
       </div>
+
+      {status === 'error' && (
+        <p className="form-error-banner" role="alert">
+          {serverError || 'No se pudo enviar tu mensaje. Intenta de nuevo en unos minutos.'}
+        </p>
+      )}
 
       <Button as="button" type="submit" className={`form-submit ${status === 'loading' ? 'is-loading' : ''}`} disabled={status === 'loading'}>
         <span className="btn-label">{submitLabel}</span>

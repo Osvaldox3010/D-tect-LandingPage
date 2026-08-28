@@ -13,6 +13,8 @@
 .field-row{ display:flex; flex-direction:column; gap:18px; }
 @media (min-width:560px){ .field-row{ flex-direction:row; } .field-row .field{ flex:1; } }
 
+.form-error-banner{ margin:4px 0 0; padding:12px 14px; border-radius:8px; background:rgba(192,57,47,.08); border:1px solid rgba(192,57,47,.25); color:var(--brand-red); font-size:13.5px; }
+
 .form-submit{ width:100%; justify-content:center; }
 @media (min-width:560px){ .form-submit{ width:auto; } }
 .form-submit .spinner{ width:15px; height:15px; border-radius:50%; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; animation:spin .7s linear infinite; display:none; }
