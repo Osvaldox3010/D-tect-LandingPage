@@ -2,9 +2,9 @@
 // sección de Contacto (donde se listan como texto) como en el ícono del
 // footer (que ahora abre un menú con estos mismos 3).
 export const WHATSAPP_NUMBERS = [
-  { digits: '525565256934', display: '55 6525 6934' },
   { digits: '525510111953', display: '55 1011 1953' },
   { digits: '525527452714', display: '55 2745 2714' },
+  { digits: '525531495321', display: '55 3149 5321' },
 ];
 
 export function waHref(digits, message = 'Me gustaría solicitar más información.') {

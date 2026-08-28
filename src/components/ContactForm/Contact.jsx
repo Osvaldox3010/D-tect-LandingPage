@@ -16,7 +16,8 @@ const METHODS = [
     />,
   },
   {
-    label: 'Llamadas', value: '+52 55 6525 6934', href: 'tel:+525565256934',
+    label: 'Llamadas',
+    numbers: WHATSAPP_NUMBERS.map((n) => ({ display: n.display, href: `tel:+${n.digits}` })),
     icon: <path d="M4 3H8L10 8L7.5 9.5C8.4 11.5 9.9 13 11.9 13.9L13.5 11.5L18.5 13.5V17.5C18.5 18.6 17.6 19.5 16.5 19.5C9.6 19 1 10.4 0.5 3.5C0.5 2.4 1.4 1.5 2.5 1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />,
   },
   {
