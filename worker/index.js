@@ -1,27 +1,23 @@
 /**
- * Cloudflare Pages Function — recibe el POST del formulario de contacto
- * (ContactForm.jsx hace fetch a '/api/contact'). Como este archivo vive en
- * /functions/api/contact.js, Cloudflare lo expone automáticamente en
- * /api/contact, sin que tengas que tocar nada más.
+ * Worker de backend para el sitio D-TECT.
  *
- * Qué hace:
- *   1. Manda la notificación de "nuevo contacto" SIEMPRE a
- *      jimenezosvaldo780@gmail.com (fijo abajo, no depende de ninguna
- *      variable de entorno, así que nunca se puede ir a otro lado por error
- *      de configuración).
- *   2. Manda un correo de confirmación al correo que la persona escribió
- *      en el formulario.
+ * IMPORTANTE: este proyecto se despliega como un Cloudflare Worker con
+ * Vite (no como "Cloudflare Pages" clásico), así que la carpeta
+ * `functions/` NO se usa aquí — esa convención es exclusiva de Pages.
+ * En este tipo de proyecto, el backend es este archivo, apuntado por
+ * `main` en wrangler.jsonc.
  *
- * Variable de entorno que SÍ necesitas configurar en Cloudflare Pages
- * (Settings → Environment variables):
- *   RESEND_API_KEY   → tu API key de https://resend.com
+ * Cómo funciona:
+ *   - Si la petición es POST a /api/contact, la maneja esta función.
+ *   - Cualquier otra petición se le pasa a los assets estáticos del sitio
+ *     (env.ASSETS.fetch), que es donde vive tu build de React/Vite.
+ *
+ * Variable de entorno que SÍ necesitas configurar en Cloudflare
+ * (Settings → Variables and secrets):
+ *   RESEND_API_KEY   → tu API key de https://resend.com (como Secret)
  *
  * Variable opcional:
- *   FROM_EMAIL       → remitente verificado en Resend, ej.
- *                       "D-TECT <no-reply@d-tect.mx>". Si no la configuras,
- *                       se usa un valor por defecto (ver abajo), pero para
- *                       que los correos lleguen de verdad necesitas tener
- *                       el dominio remitente verificado en Resend.
+ *   FROM_EMAIL       → remitente, ej. "D-TECT <onboarding@resend.dev>"
  */
 
 // Destino fijo: pase lo que pase, la notificación llega aquí.
@@ -54,7 +50,7 @@ async function sendResendEmail(apiKey, payload) {
   return res;
 }
 
-export async function onRequestPost({ request, env }) {
+async function handleContact(request, env) {
   try {
     const data = await request.json();
     const { name, email, phone, service, message } = data;
@@ -79,20 +75,18 @@ export async function onRequestPost({ request, env }) {
     const safeService = escapeHtml(service || 'No especificada');
     const safeMessage = escapeHtml(message || '(sin mensaje)').replace(/\n/g, '<br>');
 
-    // Los dos envíos son independientes a propósito: si falla la confirmación
-    // al visitante (por ejemplo, mientras uses el dominio de pruebas de
+    // Los dos envíos son independientes a propósito: si falla la
+    // confirmación al visitante (por ejemplo, en el dominio de pruebas de
     // Resend, que solo puede enviar a tu propio correo de cuenta), NO
-    // queremos que eso tumbe la notificación a la empresa, que es la parte
-    // crítica del flujo.
+    // queremos que eso tumbe la notificación a la empresa.
 
-    // 1) Notificación a la empresa — siempre al mismo correo.
     let companyEmailSent = false;
     let companyErrorMessage = null;
     try {
       await sendResendEmail(env.RESEND_API_KEY, {
         from: FROM_EMAIL,
         to: [COMPANY_EMAIL],
-        reply_to: email, // para poder responder directo a quien llenó el formulario
+        reply_to: email,
         subject: `Nueva solicitud de contacto — ${name}`,
         html: `
           <p><strong>Nombre:</strong> ${safeName}</p>
@@ -109,7 +103,6 @@ export async function onRequestPost({ request, env }) {
       console.log('Error enviando notificación a la empresa:', err.message);
     }
 
-    // 2) Confirmación para quien llenó el formulario (best-effort).
     let userEmailSent = false;
     try {
       await sendResendEmail(env.RESEND_API_KEY, {
@@ -126,14 +119,9 @@ export async function onRequestPost({ request, env }) {
       });
       userEmailSent = true;
     } catch (err) {
-      // Es normal que esto falle mientras uses el dominio de pruebas de
-      // Resend (onboarding@resend.dev) y el visitante no sea tu propio
-      // correo de cuenta. No lo tratamos como error fatal.
       console.log('Aviso: no se pudo enviar confirmación al visitante:', err.message);
     }
 
-    // Lo único que consideramos un fallo real del formulario es que la
-    // empresa no se haya enterado del contacto.
     if (!companyEmailSent) {
       return new Response(
         JSON.stringify({ ok: false, error: companyErrorMessage || 'No se pudo notificar a la empresa.' }),
@@ -153,9 +141,15 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-export async function onRequest({ request, env }) {
-  if (request.method !== 'POST') {
-    return new Response('Método no permitido', { status: 405 });
-  }
-  return onRequestPost({ request, env });
-}
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === '/api/contact' && request.method === 'POST') {
+      return handleContact(request, env);
+    }
+
+    // Cualquier otra ruta: que la sirvan los assets estáticos (tu sitio React).
+    return env.ASSETS.fetch(request);
+  },
+};
