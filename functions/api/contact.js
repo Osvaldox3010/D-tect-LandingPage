@@ -79,37 +79,69 @@ export async function onRequestPost({ request, env }) {
     const safeService = escapeHtml(service || 'No especificada');
     const safeMessage = escapeHtml(message || '(sin mensaje)').replace(/\n/g, '<br>');
 
+    // Los dos envíos son independientes a propósito: si falla la confirmación
+    // al visitante (por ejemplo, mientras uses el dominio de pruebas de
+    // Resend, que solo puede enviar a tu propio correo de cuenta), NO
+    // queremos que eso tumbe la notificación a la empresa, que es la parte
+    // crítica del flujo.
+
     // 1) Notificación a la empresa — siempre al mismo correo.
-    await sendResendEmail(env.RESEND_API_KEY, {
-      from: FROM_EMAIL,
-      to: [COMPANY_EMAIL],
-      reply_to: email, // para poder responder directo a quien llenó el formulario
-      subject: `Nueva solicitud de contacto — ${name}`,
-      html: `
-        <p><strong>Nombre:</strong> ${safeName}</p>
-        <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
-        <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
-        <p><strong>Evaluación de interés:</strong> ${safeService}</p>
-        <p><strong>Mensaje:</strong></p>
-        <p>${safeMessage}</p>
-      `,
-    });
+    let companyEmailSent = false;
+    let companyErrorMessage = null;
+    try {
+      await sendResendEmail(env.RESEND_API_KEY, {
+        from: FROM_EMAIL,
+        to: [COMPANY_EMAIL],
+        reply_to: email, // para poder responder directo a quien llenó el formulario
+        subject: `Nueva solicitud de contacto — ${name}`,
+        html: `
+          <p><strong>Nombre:</strong> ${safeName}</p>
+          <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
+          <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
+          <p><strong>Evaluación de interés:</strong> ${safeService}</p>
+          <p><strong>Mensaje:</strong></p>
+          <p>${safeMessage}</p>
+        `,
+      });
+      companyEmailSent = true;
+    } catch (err) {
+      companyErrorMessage = err.message;
+      console.log('Error enviando notificación a la empresa:', err.message);
+    }
 
-    // 2) Confirmación para quien llenó el formulario.
-    await sendResendEmail(env.RESEND_API_KEY, {
-      from: FROM_EMAIL,
-      to: [email],
-      subject: 'Hemos recibido tu solicitud — D-TECT',
-      html: `
-        <p>Hola ${safeName},</p>
-        <p>Gracias por contactar a D-TECT. Recibimos tu solicitud y un especialista se comunicará contigo pronto.</p>
-        <p><strong>Resumen de tu mensaje:</strong></p>
-        <p><strong>Evaluación de interés:</strong> ${safeService}</p>
-        <p>${safeMessage}</p>
-      `,
-    });
+    // 2) Confirmación para quien llenó el formulario (best-effort).
+    let userEmailSent = false;
+    try {
+      await sendResendEmail(env.RESEND_API_KEY, {
+        from: FROM_EMAIL,
+        to: [email],
+        subject: 'Hemos recibido tu solicitud — D-TECT',
+        html: `
+          <p>Hola ${safeName},</p>
+          <p>Gracias por contactar a D-TECT. Recibimos tu solicitud y un especialista se comunicará contigo pronto.</p>
+          <p><strong>Resumen de tu mensaje:</strong></p>
+          <p><strong>Evaluación de interés:</strong> ${safeService}</p>
+          <p>${safeMessage}</p>
+        `,
+      });
+      userEmailSent = true;
+    } catch (err) {
+      // Es normal que esto falle mientras uses el dominio de pruebas de
+      // Resend (onboarding@resend.dev) y el visitante no sea tu propio
+      // correo de cuenta. No lo tratamos como error fatal.
+      console.log('Aviso: no se pudo enviar confirmación al visitante:', err.message);
+    }
 
-    return new Response(JSON.stringify({ ok: true }), {
+    // Lo único que consideramos un fallo real del formulario es que la
+    // empresa no se haya enterado del contacto.
+    if (!companyEmailSent) {
+      return new Response(
+        JSON.stringify({ ok: false, error: companyErrorMessage || 'No se pudo notificar a la empresa.' }),
+        { status: 502, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    return new Response(JSON.stringify({ ok: true, userConfirmationSent: userEmailSent }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
