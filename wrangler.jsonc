@@ -3,6 +3,9 @@
   "name": "d-tect-landingpage",
   "compatibility_date": "2026-08-28",
   "main": "./worker/index.js",
+  "vars": {
+    "FROM_EMAIL": "D-TECT <onboarding@resend.dev>"
+  },
   "assets": {
     "binding": "ASSETS",
     "not_found_handling": "single-page-application"
