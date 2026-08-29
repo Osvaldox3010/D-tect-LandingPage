@@ -71,6 +71,7 @@ export function Footer() {
               <a href="#" aria-label="Facebook"><svg viewBox="0 0 20 20" fill="none"><path d="M12.5 6.5H14V3.5H12.2C10.1 3.5 9 4.6 9 6.6V8.5H7V11.5H9V17H12V11.5H14L14.5 8.5H12V7C12 6.4 12.1 6.5 12.5 6.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg></a>
               <WhatsAppMenu />
             </div>
+            <a className="footer-legal-link" href="#">Términos y condiciones</a>
           </div>
 
           <div className="footer-col">

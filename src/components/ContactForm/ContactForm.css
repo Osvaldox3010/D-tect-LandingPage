@@ -33,6 +33,21 @@
 .terms-link:hover, .terms-link:focus-visible{ color:var(--brand-red); }
 .terms-field.has-error .terms-checkbox__mark{ border-color:var(--brand-red); }
 .terms-field .field__error{ margin-top:8px; }
+.terms-field.has-error .field__error{ display:block; }
+
+/* Temblor + resalte rojo cuando se intenta enviar sin aceptar los términos */
+@keyframes terms-shake{
+  10%, 90% { transform:translateX(-1px); }
+  20%, 80% { transform:translateX(2px); }
+  30%, 50%, 70% { transform:translateX(-4px); }
+  40%, 60% { transform:translateX(4px); }
+}
+.terms-field.shake .terms-checkbox__mark{
+  animation:terms-shake .5s cubic-bezier(.36,.07,.19,.97) both;
+  border-color:var(--brand-red);
+  box-shadow:0 0 0 4px rgba(193,68,58,.18);
+}
+.terms-field.shake .terms-checkbox__text{ color:var(--brand-red); }
 
 .form-success{ display:none; text-align:center; padding:46px 24px; border:1px solid var(--border-soft); border-radius:16px; background:var(--bg-card); }
 .form-success.is-visible{ display:block; }

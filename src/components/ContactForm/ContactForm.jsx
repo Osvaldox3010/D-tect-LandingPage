@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '../ui/Button';
 import './ContactForm.css';
 
@@ -16,9 +16,20 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [terminos, setTerminos] = useState(false);
   const [serverError, setServerError] = useState('');
+  const termsFieldRef = useRef(null);
 
   function update(field, value) {
     setValues((v) => ({ ...v, [field]: value }));
+  }
+
+  function triggerTermsShake() {
+    const el = termsFieldRef.current;
+    if (!el) return;
+    // Se reinicia la clase para que la animación vuelva a correr
+    // aunque el usuario intente enviar varias veces seguidas.
+    el.classList.remove('shake');
+    void el.offsetWidth; // fuerza reflow
+    el.classList.add('shake');
   }
 
   function validate() {
@@ -27,7 +38,10 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
     if (!EMAIL_RE.test(values.email)) next.email = true;
     if (values.phone.trim().length < 7) next.phone = true;
     if (!compact && values.message.trim().length < 2) next.message = true;
-    if (!terminos) next.terminos = true;
+    if (!terminos) {
+      next.terminos = true;
+      triggerTermsShake();
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -117,7 +131,11 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
         </p>
       )}
 
-      <div className={`terms-field ${errors.terminos ? 'has-error' : ''}`}>
+      <div
+        className={`terms-field ${errors.terminos ? 'has-error' : ''}`}
+        ref={termsFieldRef}
+        onAnimationEnd={() => termsFieldRef.current?.classList.remove('shake')}
+      >
         <label className="terms-checkbox">
           <input
             className="CheckTermsNConditions"
@@ -144,7 +162,7 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
         as="button"
         type="submit"
         className={`form-submit ${status === 'loading' ? 'is-loading' : ''}`}
-        disabled={status === 'loading' || !terminos}
+        disabled={status === 'loading'}
       >
         <span className="btn-label">{submitLabel}</span>
         <span className="spinner" aria-hidden="true" />

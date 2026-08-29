@@ -5,6 +5,8 @@
 .footer-grid{ position:relative; z-index:1; display:flex; flex-direction:column; gap:38px; }
 @media (min-width:768px){ .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:32px; } }
 .footer-brand p{ margin-top:16px; font-size:13.5px; color:#98A0B0; max-width:280px; line-height:1.6; }
+.footer-legal-link{ display:inline-block; margin-top:18px; font-size:14px; font-weight:600; color:#E7E9EE; text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(255,255,255,.35); transition:color .25s ease, text-decoration-color .25s ease; }
+.footer-legal-link:hover, .footer-legal-link:focus-visible{ color: var(--brand-red); text-decoration-color:var(--brand-red); outline:none; }
 .footer-social{ display:flex; gap:10px; margin-top:22px; }
 .footer-social a{ width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; transition:border-color .3s, color .3s; color:#98A0B0; }
 .footer-social a:hover{ border-color:var(--brand-red); color:#fff; }
