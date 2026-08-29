@@ -13,7 +13,7 @@
 .field-row{ display:flex; flex-direction:column; gap:18px; }
 @media (min-width:560px){ .field-row{ flex-direction:row; } .field-row .field{ flex:1; } }
 
-.form-error-banner{ margin:4px 0 0; padding:12px 14px; border-radius:8px; background:rgba(192,57,47,.08); border:1px solid rgba(192,57,47,.25); color:var(--brand-red); font-size:13.5px; }
+.form-error-banner{ margin:4px 0 4px; padding:12px 14px; border-radius:8px; background:rgba(192,57,47,.08); border:1px solid rgba(192,57,47,.25); color:var(--brand-red); font-size:13.5px; }
 
 .form-submit{ width:100%; justify-content:center; }
 @media (min-width:560px){ .form-submit{ width:auto; } }
@@ -21,6 +21,18 @@
 .form-submit.is-loading .spinner{ display:inline-block; }
 .form-submit.is-loading .btn-label{ display:none; }
 @keyframes spin{ to{ transform:rotate(360deg); } }
+
+.terms-field{ margin:18px 0 20px; }
+.terms-checkbox{ position:relative; display:flex; align-items:flex-start; gap:12px; cursor:pointer; color:var(--text-heading); font-size:14px; line-height:1.5; }
+.terms-checkbox input{ position:absolute; opacity:0; pointer-events:none; }
+.terms-checkbox__mark{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; min-width:20px; flex-shrink:0; margin-top:2px; border-radius:6px; border:1px solid var(--border-soft); background:var(--bg-card); transition:border-color .2s var(--ease-soft), box-shadow .2s var(--ease-soft), background-color .2s var(--ease-soft); }
+.terms-checkbox input:checked + .terms-checkbox__mark{ background:var(--navy); border-color:var(--navy); box-shadow:0 0 0 4px rgba(22,36,63,.1); }
+.terms-checkbox input:focus-visible + .terms-checkbox__mark{ outline:none; border-color:var(--navy); box-shadow:0 0 0 4px rgba(22,36,63,.12); }
+.terms-checkbox input:checked + .terms-checkbox__mark::after{ content:""; width:7px; height:11px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); display:block; margin-top:-1px; }
+.terms-link{ color:var(--navy); text-decoration:underline; text-underline-offset:2px; }
+.terms-link:hover, .terms-link:focus-visible{ color:var(--brand-red); }
+.terms-field.has-error .terms-checkbox__mark{ border-color:var(--brand-red); }
+.terms-field .field__error{ margin-top:8px; }
 
 .form-success{ display:none; text-align:center; padding:46px 24px; border:1px solid var(--border-soft); border-radius:16px; background:var(--bg-card); }
 .form-success.is-visible{ display:block; }

@@ -14,6 +14,7 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
   const [values, setValues] = useState({ name: '', email: '', phone: '', service: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [terminos, setTerminos] = useState(false);
   const [serverError, setServerError] = useState('');
 
   function update(field, value) {
@@ -26,6 +27,7 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
     if (!EMAIL_RE.test(values.email)) next.email = true;
     if (values.phone.trim().length < 7) next.phone = true;
     if (!compact && values.message.trim().length < 2) next.message = true;
+    if (!terminos) next.terminos = true;
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -115,7 +117,35 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
         </p>
       )}
 
-      <Button as="button" type="submit" className={`form-submit ${status === 'loading' ? 'is-loading' : ''}`} disabled={status === 'loading'}>
+      <div className={`terms-field ${errors.terminos ? 'has-error' : ''}`}>
+        <label className="terms-checkbox">
+          <input
+            className="CheckTermsNConditions"
+            type="checkbox"
+            checked={terminos}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setTerminos(checked);
+              if (checked) {
+                setErrors((prev) => ({ ...prev, terminos: false }));
+              }
+            }}
+            required
+          />
+          <span className="terms-checkbox__mark" aria-hidden="true" />
+          <span className="terms-checkbox__text">
+            Acepto los <a href="#" className="terms-link">términos y condiciones</a> <span aria-hidden="true">*</span>
+          </span>
+        </label>
+        <p className="field__error">Debes aceptar los términos para continuar.</p>
+      </div>
+
+      <Button
+        as="button"
+        type="submit"
+        className={`form-submit ${status === 'loading' ? 'is-loading' : ''}`}
+        disabled={status === 'loading' || !terminos}
+      >
         <span className="btn-label">{submitLabel}</span>
         <span className="spinner" aria-hidden="true" />
       </Button>
