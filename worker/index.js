@@ -34,6 +34,66 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+// Colores de marca de D-TECT (src/styles/tokens.css)
+const BRAND = {
+  navy: '#16243F',
+  red: '#C1443A',
+  green: '#2E8B57',
+  bg: '#F4F1EC',
+  text: '#1c1c1a',
+  muted: '#6b6a66',
+};
+
+/**
+ * Plantilla de correo con la marca de D-TECT. Usa estilos en línea y tablas
+ * (en vez de <style> o flex/grid) porque muchos clientes de correo
+ * (Outlook, Gmail en algunos casos) ignoran o rompen CSS moderno.
+ */
+function renderEmailHtml({ heading, introHtml, rows, footerNote }) {
+  const rowsHtml = rows
+    .map(
+      (r) => `
+        <tr>
+          <td style="padding:10px 0; border-bottom:1px solid #eceae4; font-size:13px; color:${BRAND.muted}; width:130px; vertical-align:top;">${r.label}</td>
+          <td style="padding:10px 0; border-bottom:1px solid #eceae4; font-size:14.5px; color:${BRAND.text}; vertical-align:top;">${r.value}</td>
+        </tr>`
+    )
+    .join('');
+
+  return `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.bg}; padding:32px 16px; font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #e6e3db;">
+          <tr>
+            <td style="background:${BRAND.navy}; padding:22px 28px;">
+              <span style="font-size:17px; font-weight:700; letter-spacing:.02em; color:#ffffff;">D-TECT</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 28px 8px;">
+              <h1 style="margin:0 0 14px; font-size:19px; color:${BRAND.text};">${heading}</h1>
+              <div style="font-size:14.5px; line-height:1.55; color:${BRAND.text};">${introHtml}</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 28px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                ${rowsHtml}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#faf9f6; padding:16px 28px; font-size:12px; color:${BRAND.muted};">
+              ${footerNote}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>`;
+}
+
 async function sendResendEmail(apiKey, payload) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -88,14 +148,18 @@ async function handleContact(request, env) {
         to: [COMPANY_EMAIL],
         reply_to: email,
         subject: `Nueva solicitud de contacto — ${name}`,
-        html: `
-          <p><strong>Nombre:</strong> ${safeName}</p>
-          <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
-          <p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>
-          <p><strong>Evaluación de interés:</strong> ${safeService}</p>
-          <p><strong>Mensaje:</strong></p>
-          <p>${safeMessage}</p>
-        `,
+        html: renderEmailHtml({
+          heading: 'Nueva solicitud de contacto',
+          introHtml: `Alguien acaba de llenar el formulario del sitio. Puedes responderle directo a este correo, ya viene configurado para contestarle a <strong>${escapeHtml(email)}</strong>.`,
+          rows: [
+            { label: 'Nombre', value: safeName },
+            { label: 'Correo', value: escapeHtml(email) },
+            { label: 'Teléfono', value: escapeHtml(phone) },
+            { label: 'Evaluación de interés', value: safeService },
+            { label: 'Mensaje', value: safeMessage },
+          ],
+          footerNote: 'Notificación automática del formulario de contacto de d-tect.mx.',
+        }),
       });
       companyEmailSent = true;
     } catch (err) {
@@ -109,13 +173,15 @@ async function handleContact(request, env) {
         from: FROM_EMAIL,
         to: [email],
         subject: 'Hemos recibido tu solicitud — D-TECT',
-        html: `
-          <p>Hola ${safeName},</p>
-          <p>Gracias por contactar a D-TECT. Recibimos tu solicitud y un especialista se comunicará contigo pronto.</p>
-          <p><strong>Resumen de tu mensaje:</strong></p>
-          <p><strong>Evaluación de interés:</strong> ${safeService}</p>
-          <p>${safeMessage}</p>
-        `,
+        html: renderEmailHtml({
+          heading: `Hola ${safeName}, ¡gracias por escribirnos!`,
+          introHtml: 'Recibimos tu solicitud y un especialista se pondrá en contacto contigo pronto. Aquí tienes una copia de lo que nos enviaste:',
+          rows: [
+            { label: 'Evaluación de interés', value: safeService },
+            { label: 'Tu mensaje', value: safeMessage },
+          ],
+          footerNote: 'Si tú no llenaste este formulario, puedes ignorar este correo.',
+        }),
       });
       userEmailSent = true;
     } catch (err) {
