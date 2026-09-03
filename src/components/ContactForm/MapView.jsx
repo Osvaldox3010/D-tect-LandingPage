@@ -9,6 +9,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 // `?worker&url` hace que Vite empaquete este archivo aparte y nos dé su URL
 // final ya con hash, en vez de inlinearlo.
 import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+import { OFFICE } from '../../config/contact.config';
 
 maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
@@ -34,10 +35,8 @@ maplibregl.setWorkerUrl(maplibreWorkerUrl);
  */
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron';
-
-// Coordenadas de ejemplo (Centro, Ciudad de México) — ajustar a la
-// ubicación real de la oficina cuando se tenga la dirección definitiva.
-const OFFICE = { lng: -99.1419, lat: 19.4352 };
+// OFFICE (dirección y coordenadas) ahora vive en src/config/contact.config.js
+// — fuente única para el mapa y el texto de dirección de Contact.jsx.
 
 export function MapView({ zoom = 15.4 }) {
   const containerRef = useRef(null);

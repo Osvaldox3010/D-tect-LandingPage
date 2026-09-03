@@ -1,7 +1,7 @@
 import { Eyebrow } from '../ui/Eyebrow';
 import { ContactForm } from '../ContactForm/ContactForm';
 import { MapView } from './MapView';
-import { WHATSAPP_NUMBERS, waHref } from '../../config/contact.config';
+import { WHATSAPP_NUMBERS, waHref, CONTACT_EMAIL, OFFICE } from '../../config/contact.config';
 import './Contact.css';
 
 const METHODS = [
@@ -21,15 +21,12 @@ const METHODS = [
     icon: <path d="M4 3H8L10 8L7.5 9.5C8.4 11.5 9.9 13 11.9 13.9L13.5 11.5L18.5 13.5V17.5C18.5 18.6 17.6 19.5 16.5 19.5C9.6 19 1 10.4 0.5 3.5C0.5 2.4 1.4 1.5 2.5 1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />,
   },
   {
-    label: 'Correo electrónico', value: 'contacto@d-tect.mx', href: 'mailto:contacto@d-tect.mx',
+    label: 'Correo electrónico', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}`,
     icon: <><rect x="2" y="4" width="16" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.4" /><path d="M3 5.5L10 11L17 5.5" stroke="currentColor" strokeWidth="1.4" /></>,
   },
 ];
 
-// TODO: reemplazar por la dirección real de la oficina cuando se tenga
-// definida — mientras tanto es un dato de ejemplo (ver MapView.jsx).
-const OFFICE_ADDRESS = 'Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000';
-const OFFICE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE_ADDRESS)}`;
+const OFFICE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE.address)}`;
 
 export function Contact() {
   return (
@@ -94,7 +91,7 @@ export function Contact() {
               <span className="map-card__label">Nuestra ubicación</span>
               <div className="map-card__addr">
                 <strong>D-TECT — Oficina Central</strong>
-                <span>{OFFICE_ADDRESS}</span>
+                <span>{OFFICE.address}</span>
                 <a
                   className="map-card__addr-link"
                   href={OFFICE_MAPS_URL}

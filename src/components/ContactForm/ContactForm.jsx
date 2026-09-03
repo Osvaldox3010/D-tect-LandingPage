@@ -12,6 +12,9 @@ const EMAIL_RE = /.+@.+\..+/;
  */
 export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' }) {
   const [values, setValues] = useState({ name: '', email: '', phone: '', service: '', message: '' });
+  // Honeypot antispam: campo invisible para personas. Si un bot lo llena,
+  // el backend descarta el envío en silencio (ver worker/index.js).
+  const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [terminos, setTerminos] = useState(false);
@@ -55,7 +58,7 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, website }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.ok === false) {
@@ -83,6 +86,20 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
 
   return (
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      {/* Honeypot: oculto visualmente y fuera del flujo de tab/lectores de
+          pantalla. Una persona real nunca lo llena; un bot que autocompleta
+          formularios sí. Ver worker/index.js. */}
+      {/* <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hp-field"
+      /> */}
+
       <div className={`field ${errors.name ? 'has-error' : ''}`}>
         <label htmlFor="cf-name">Nombre completo</label>
         <input id="cf-name" autoComplete="name" value={values.name} onChange={(e) => update('name', e.target.value)} />

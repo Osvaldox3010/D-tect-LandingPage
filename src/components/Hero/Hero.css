@@ -3,7 +3,11 @@
 @media (min-width:1200px){ .hero{ padding:76px 0 64px; } }
 
 .hero__grid{ position:relative; z-index:4; display:flex; flex-direction:column; gap:36px; }
-@media (min-width:1200px){
+/* En 912px (Surface Pro / tablets grandes en portrait) ya entra el layout
+   de 2 columnas — antes esperaba hasta 1200px y esos anchos intermedios
+   se veían como una sola columna con mucho espacio vacío alrededor de la
+   foto. Por debajo de 912px sigue apilado en una sola columna. */
+@media (min-width:912px){
   .hero__grid{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; min-height:520px; }
   .hero__grid > div:first-child{ padding-right:24px; }
 }
@@ -57,7 +61,7 @@
    texto de al lado ni qué tan alta sea la imagen activa. */
 .hero__visual{ position:relative; height:290px; display:flex; align-items:center; justify-content:center; }
 @media (min-width:640px){ .hero__visual{ height:360px; } }
-@media (min-width:1200px){ .hero__visual{ height:440px; } }
+@media (min-width:912px){ .hero__visual{ height:440px; } }
 
 /* Capa ambiental: cubre TODA la sección del Hero (texto + visual), sin caja,
    sin overflow/border-radius que la encierre. Vive detrás de .hero__grid
@@ -90,24 +94,29 @@
 .stage-frame{
   position:relative; width:min(420px,86%);
 }
+/* A partir de 912px el grid pasa a 2 columnas (ver .hero__grid arriba):
+   la foto queda en su propia columna, con más aire alrededor que en el
+   layout apilado — se ensancha el marco en el mismo punto para
+   aprovecharlo, en vez de quedarse topada en 420px como en mobile. */
+@media (min-width:912px){ .stage-frame{ width:min(480px,80%); } }
 /* MODIFICADO: antes solo se limitaba el ANCHO (width:100%, height:auto) y
    se asumía que todas las fotos eran más anchas que altas. Las de
    "Antecedentes penales" y "Estudio socioeconómico" son más altas que
    anchas (retrato): a 420px de ancho terminaban más altas que el
    .hero__visual (alto FIJO: 290/360/440px según breakpoint) y el
    .hero{overflow:hidden} las recortaba por abajo.
-   Se agrega max-height (en px, uno por breakpoint, igual al alto de
-   .hero__visual) — en un <img> real esto SÍ recalcula el ancho junto con
-   el alto para mantener la proporción (a diferencia de un max-height en
-   %, que aquí no se puede resolver porque .stage-frame no tiene una
-   altura explícita). Como .stage-frame sigue sin alto fijo, su tamaño
-   sigue ajustándose exactamente al de la imagen ya escalada — por eso
-   esto NO afecta el overlay de la pantalla del laptop en Poligrafía
-   (.stage-frame__screen, calculado en % sobre este mismo cuadro): esa
-   imagen es horizontal y nunca llega a tocar el límite de alto. */
-.stage-frame img{ display:block; width:100%; height:auto; max-height:290px; }
+   CORREGIDO: agregar solo max-height con width:100% fijo NO mantiene la
+   proporción — el navegador solo recalcula ancho+alto juntos cuando AMBOS
+   (width y height) son 'auto'. Con width:100% fijo, max-height únicamente
+   recorta el alto y deja el ancho igual, aplastando la imagen (efecto
+   "se ve ancha/estirada" en las 2 fotos retrato, justo en el breakpoint
+   donde su alto natural a 420px de ancho supera el tope). Con width:auto +
+   height:auto + max-width/max-height, el navegador sí escala ambos ejes
+   juntos preservando la proporción — funciona igual para fotos horizontales
+   (limitadas por max-height) y verticales (limitadas por max-width). */
+.stage-frame img{ display:block; width:auto; height:auto; max-width:100%; max-height:290px; object-fit:contain; margin-inline:auto; }
 @media (min-width:640px){ .stage-frame img{ max-height:360px; } }
-@media (min-width:1200px){ .stage-frame img{ max-height:440px; } }
+@media (min-width:912px){ .stage-frame img{ max-height:440px; } }
 
 /* Chip de servicio: posición FIJA, pegada al fondo de .hero__stage (tamaño
    ahora realmente constante), separada de la imagen a propósito — nunca

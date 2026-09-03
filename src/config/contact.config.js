@@ -10,3 +10,17 @@ export const WHATSAPP_NUMBERS = [
 export function waHref(digits, message = 'Me gustaría solicitar más información.') {
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
+
+// Correo público que se muestra en la sección de Contacto.
+export const CONTACT_EMAIL = 'contacto@grupo-d-tect.com';
+
+// TODO: reemplazar por la dirección y coordenadas reales de la oficina.
+// Mientras no se actualice, el mapa y el texto de dirección en la sección
+// de Contacto muestran este dato de ejemplo (Centro, Ciudad de México).
+// Coordenadas: usa Google Maps -> clic derecho en el punto exacto -> el
+// primer número es la latitud y el segundo la longitud.
+export const OFFICE = {
+  address: 'Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000',
+  lat: 19.4352,
+  lng: -99.1419,
+};

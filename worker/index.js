@@ -18,10 +18,12 @@
  *
  * Variable opcional:
  *   FROM_EMAIL       → remitente, ej. "D-TECT <onboarding@resend.dev>"
+ *   CONTACT_TO_EMAIL → a dónde llega la notificación de cada formulario
+ *                       (si no se configura, usa el correo por defecto de abajo)
  */
 
-// Destino fijo: pase lo que pase, la notificación llega aquí.
-const COMPANY_EMAIL = 'jimenezosvaldo780@gmail.com';
+// Se usa solo si CONTACT_TO_EMAIL no está configurada en el entorno.
+const DEFAULT_COMPANY_EMAIL = 'jimenezosvaldo780@gmail.com';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -113,7 +115,19 @@ async function sendResendEmail(apiKey, payload) {
 async function handleContact(request, env) {
   try {
     const data = await request.json();
-    const { name, email, phone, service, message } = data;
+    const { name, email, phone, service, message, website } = data;
+
+    // Honeypot: "website" es un campo invisible para personas (ver
+    // ContactForm.jsx). Los bots que llenan todos los campos de un
+    // formulario automáticamente sí lo rellenan. Si viene con algo,
+    // respondemos como si todo hubiera salido bien pero NO mandamos
+    // ningún correo — así el bot no reintenta ni sabe que fue detectado.
+    if (website) {
+      return new Response(JSON.stringify({ ok: true, userConfirmationSent: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     if (!name || !email || !phone || !EMAIL_RE.test(email)) {
       return new Response(
@@ -129,7 +143,8 @@ async function handleContact(request, env) {
       );
     }
 
-    const FROM_EMAIL = env.FROM_EMAIL || 'D-TECT Web <no-reply@d-tect.mx>';
+    const FROM_EMAIL = env.FROM_EMAIL || 'D-TECT Web <no-reply@grupo-d-tect.com>';
+    const COMPANY_EMAIL = env.CONTACT_TO_EMAIL || DEFAULT_COMPANY_EMAIL;
 
     const safeName = escapeHtml(name);
     const safeService = escapeHtml(service || 'No especificada');
