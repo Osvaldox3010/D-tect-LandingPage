@@ -143,7 +143,7 @@ async function handleContact(request, env) {
       );
     }
 
-    const FROM_EMAIL = env.FROM_EMAIL || 'D-TECT Web <no-reply@grupo-d-tect.com>';
+    const FROM_EMAIL = env.FROM_EMAIL || 'D-TECT Web <no-reply@mail.grupo-d-tect.com>';
     const COMPANY_EMAIL = env.CONTACT_TO_EMAIL || DEFAULT_COMPANY_EMAIL;
 
     const safeName = escapeHtml(name);
