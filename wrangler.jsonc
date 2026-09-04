@@ -11,12 +11,10 @@
     { "pattern": "www.grupo-d-tect.com", "custom_domain": true }
   ],
   "vars": {
-    // IMPORTANTE: este remitente solo funcionará una vez que grupo-d-tect.com
-    // (o el subdominio que elijas) esté verificado en Resend con sus
-    // registros DNS (SPF/DKIM). Mientras no esté verificado, deja temporalmente
-    // "D-TECT <onboarding@resend.dev>" para poder seguir probando el formulario
-    // (Resend solo entrega ese remitente al correo dueño de la cuenta).
-    "FROM_EMAIL": "D-TECT <contacto@grupo-d-tect.com>",
+    // Dominio verificado en Resend (mail.grupo-d-tect.com) — confirmado
+    // "Domain verified: Your domain is ready to send emails." el 3 de
+    // septiembre de 2026. Ya no depende del sandbox de Resend.
+    "FROM_EMAIL": "D-TECT <no-reply@mail.grupo-d-tect.com>",
     // Correo(s) que reciben la notificación de cada formulario. Cámbialo por
     // el correo corporativo definitivo si jimenezosvaldo780@gmail.com era
     // solo un correo de pruebas.
