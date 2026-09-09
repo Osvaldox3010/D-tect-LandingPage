@@ -247,7 +247,7 @@
   .aud-row--reverse {
     grid-template-columns: 1fr;
     min-height: auto;
-    background: #fff;
+    background: var(--bg-card);
   }
 
   /* El texto va primero. */
