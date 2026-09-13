@@ -14,13 +14,11 @@ export function waHref(digits, message = 'Me gustaría solicitar más informaci�
 // Correo público que se muestra en la sección de Contacto.
 export const CONTACT_EMAIL = 'contacto@grupo-d-tect.com';
 
-// TODO: reemplazar por la dirección y coordenadas reales de la oficina.
-// Mientras no se actualice, el mapa y el texto de dirección en la sección
-// de Contacto muestran este dato de ejemplo (Centro, Ciudad de México).
 // Coordenadas: usa Google Maps -> clic derecho en el punto exacto -> el
 // primer número es la latitud y el segundo la longitud.
 export const OFFICE = {
-  address: 'Av. Ejemplo 123, Col. Centro, Ciudad de México, CP 06000',
-  lat: 19.4352,
-  lng: -99.1419,
+  address: 'Av. México-Tenochtitlán 42-103A, Tabacalera, Cuauhtémoc, 06030 Ciudad de México, CDMX',
+  mapsUrl: 'https://maps.app.goo.gl/8ZDQ2GGBkamcy9m88',
+  lat: 19.4381584,
+  lng: -99.1513015,
 };

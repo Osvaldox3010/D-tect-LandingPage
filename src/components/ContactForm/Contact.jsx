@@ -26,8 +26,6 @@ const METHODS = [
   },
 ];
 
-const OFFICE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE.address)}`;
-
 export function Contact() {
   return (
     <section className="contact" id="contacto">
@@ -94,7 +92,7 @@ export function Contact() {
                 <span>{OFFICE.address}</span>
                 <a
                   className="map-card__addr-link"
-                  href={OFFICE_MAPS_URL}
+                  href={OFFICE.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
