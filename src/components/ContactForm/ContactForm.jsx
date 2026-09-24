@@ -80,6 +80,9 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje', o
         </svg>
         <h3>Mensaje enviado</h3>
         <p>Gracias por contactarnos. Nos comunicaremos contigo pronto.</p>
+        <p className="form-success__notice">
+          Si no recibes nuestro correo, revisa también la carpeta de spam o correo no deseado.
+        </p>
       </div>
     );
   }

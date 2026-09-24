@@ -13,3 +13,7 @@
   transition:transform .25s var(--ease-soft), background-color .25s var(--ease-soft);
 }
 .service-modal__cta:hover{ background:var(--brand-red); transform:translateY(-1px); }
+
+.modal__sub {
+  white-space: pre-line;
+}

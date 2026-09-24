@@ -54,3 +54,4 @@
 .form-success__icon{ color:var(--brand-green); margin:0 auto 16px; width:44px; height:44px; }
 .form-success h3{ font-family:var(--font-display); font-weight:700; font-size:21px; }
 .form-success p{ margin-top:8px; color:var(--text-gray); font-size:14.5px; }
+.form-success__notice{ font-weight:600; color:var(--text-heading) !important; }
