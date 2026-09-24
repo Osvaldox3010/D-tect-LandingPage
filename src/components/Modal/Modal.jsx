@@ -39,7 +39,7 @@ export function Modal({ isOpen, onClose, children, variant = 'default', ariaLabe
       aria-hidden={!isOpen}
     >
       <div
-        className={`modal ${variant === 'video' ? 'modal--video' : ''}`}
+        className={`modal ${variant !== 'default' ? `modal--${variant}` : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}

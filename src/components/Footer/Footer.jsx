@@ -53,7 +53,7 @@ function WhatsAppMenu() {
   );
 }
 
-export function Footer() {
+export function Footer({ onOpenModal }) {
   return (
     <footer className="site-footer">
       <div className="footer-wave" aria-hidden="true">
@@ -67,11 +67,22 @@ export function Footer() {
             <Logo dark />
             <p>Evaluaciones profesionales de control de confianza con ética, precisión y confidencialidad.</p>
             <div className="footer-social">
-              <a href="#" aria-label="Instagram"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="4.5" stroke="currentColor" strokeWidth="1.4" /><circle cx="10" cy="10" r="3.6" stroke="currentColor" strokeWidth="1.4" /><circle cx="14.6" cy="5.4" r="1" fill="currentColor" /></svg></a>
-              <a href="#" aria-label="Facebook"><svg viewBox="0 0 20 20" fill="none"><path d="M12.5 6.5H14V3.5H12.2C10.1 3.5 9 4.6 9 6.6V8.5H7V11.5H9V17H12V11.5H14L14.5 8.5H12V7C12 6.4 12.1 6.5 12.5 6.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg></a>
+              <a href="https://www.instagram.com/dtectredes?stkn=MW9qY3J3ejM2eTEzMg==" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="4.5" stroke="currentColor" strokeWidth="1.4" /><circle cx="10" cy="10" r="3.6" stroke="currentColor" strokeWidth="1.4" /><circle cx="14.6" cy="5.4" r="1" fill="currentColor" /></svg></a>
+              <a href="https://www.facebook.com/share/1CYhpxLQhf/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 20 20" fill="none"><path d="M12.5 6.5H14V3.5H12.2C10.1 3.5 9 4.6 9 6.6V8.5H7V11.5H9V17H12V11.5H14L14.5 8.5H12V7C12 6.4 12.1 6.5 12.5 6.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg></a>
+              <a href="https://www.tiktok.com/@grupo.dtect?_r=1&_t=ZS-99wv3EswN2i" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke="currentColor" strokeLinejoin="round" d="M16 1.5h-3.5V16c0 1.5 -1.5 3 -3 3s-3 -0.5 -3 -3c0 -2 1.899 -3.339 3.5 -3V9.5c-6.12 0 -7 5 -7 6.5s0.977 6.5 6.5 6.5c4.522 0 6.5 -3.5 6.5 -6v-8c1.146 1.018 2.922 1.357 5 1.5V6.5c-3.017 0 -5 -2.654 -5 -5Z" strokeWidth="1"></path>
+                </svg>
+              </a>
               <WhatsAppMenu />
             </div>
-            <a className="footer-legal-link" href="#">Términos y condiciones</a>
+            <a
+              className="footer-legal-link"
+              href="#"
+              onClick={(e) => { e.preventDefault(); onOpenModal?.('privacy'); }}
+            >
+              Aviso de privacidad
+            </a>
           </div>
 
           <div className="footer-col">

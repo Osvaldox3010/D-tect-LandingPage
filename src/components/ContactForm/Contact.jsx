@@ -26,7 +26,7 @@ const METHODS = [
   },
 ];
 
-export function Contact() {
+export function Contact({ onOpenPrivacy }) {
   return (
     <section className="contact" id="contacto">
       <div className="container">
@@ -72,7 +72,7 @@ export function Contact() {
           </div>
 
           <div className="contact__form-wrap">
-            <ContactForm />
+            <ContactForm onOpenPrivacy={onOpenPrivacy} />
           </div>
 
           <div className="contact__map-wrap">

@@ -10,7 +10,7 @@ const EMAIL_RE = /.+@.+\..+/;
  * onSubmit recibe los datos ya validados; aquí se deja un stub que
  * llama a /functions/contact.js (ver INSTALL.md)
  */
-export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' }) {
+export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje', onOpenPrivacy }) {
   const [values, setValues] = useState({ name: '', email: '', phone: '', service: '', message: '' });
   // Honeypot antispam: campo invisible para personas. Si un bot lo llena,
   // el backend descarta el envío en silencio (ver worker/index.js).
@@ -169,10 +169,14 @@ export function ContactForm({ compact = false, submitLabel = 'Enviar mensaje' })
           />
           <span className="terms-checkbox__mark" aria-hidden="true" />
           <span className="terms-checkbox__text">
-            Acepto los <a href="#" className="terms-link">términos y condiciones</a> <span aria-hidden="true">*</span>
+            Acepto el <a
+              href="#"
+              className="terms-link"
+              onClick={(e) => { e.preventDefault(); onOpenPrivacy?.(); }}
+            >aviso de privacidad</a> <span aria-hidden="true">*</span>
           </span>
         </label>
-        <p className="field__error">Debes aceptar los términos para continuar.</p>
+        <p className="field__error">Debes aceptar el aviso de privacidad para continuar.</p>
       </div>
 
       <Button

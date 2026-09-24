@@ -20,8 +20,23 @@
   position:relative; aspect-ratio:16/9; background:var(--navy); border-radius:var(--r-md); overflow:hidden;
   display:flex; align-items:center; justify-content:center; color:#fff;
 }
-.modal--video .video-frame .scope-canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
-.modal--video .video-frame p{ position:relative; z-index:1; font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; opacity:.75; }
+/* El <video> real (antes iba aquí el canvas placeholder "scope-canvas").
+   object-fit:contain + fondo navy = pilarboxing prolijo si el video no es
+   exactamente 16:9 (el que se usa hoy es casi cuadrado), en vez de recortar
+   o deformar la imagen. */
+.modal--video .video-frame__el{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:var(--navy); }
+
+/* ---- Modal de documento (Aviso de privacidad en PDF) ----
+   Mismo look & feel que el resto de modales (mismo .modal base: fondo,
+   radios, tipografía), solo más ancho/alto para poder leer el PDF
+   cómodamente, con el visor de PDF nativo del navegador dentro. */
+.modal--document{ max-width:760px; }
+.modal--document .modal__sub a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.modal--document .document-frame{
+  margin-top:6px; width:100%; height:min(70vh,640px); border-radius:var(--r-md);
+  overflow:hidden; border:1px solid var(--border-soft); background:#fff;
+}
+.modal--document .document-frame iframe{ display:block; width:100%; height:100%; border:0; }
 
 .modal__close{
   position:absolute; top:16px; right:16px; width:38px; height:38px; border-radius:50%;

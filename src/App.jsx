@@ -11,10 +11,11 @@ import { Contact } from './components/ContactForm/Contact';
 import { Footer } from './components/Footer/Footer';
 import { InfoModal } from './components/Modal/InfoModal';
 import { VideoModal } from './components/Modal/VideoModal';
+import { PrivacyModal } from './components/Modal/PrivacyModal';
 import { ServiceModal } from './components/Modal/ServiceModal';
 
 export default function App() {
-  const [openModal, setOpenModal] = useState(null); // null | 'info' | 'video'
+  const [openModal, setOpenModal] = useState(null); // null | 'info' | 'video' | 'privacy'
   const [activeService, setActiveService] = useState(null); // svc | null — detalle del carrusel
 
   return (
@@ -40,13 +41,14 @@ export default function App() {
 
         <Differentiators />
         <FAQ />
-        <Contact />
+        <Contact onOpenPrivacy={() => setOpenModal('privacy')} />
       </main>
 
-      <Footer />
+      <Footer onOpenModal={setOpenModal} />
 
-      <InfoModal isOpen={openModal === 'info'} onClose={() => setOpenModal(null)} />
+      <InfoModal isOpen={openModal === 'info'} onClose={() => setOpenModal(null)} onOpenPrivacy={() => setOpenModal('privacy')} />
       <VideoModal isOpen={openModal === 'video'} onClose={() => setOpenModal(null)} />
+      <PrivacyModal isOpen={openModal === 'privacy'} onClose={() => setOpenModal(null)} />
       <ServiceModal
         service={activeService}
         onClose={() => setActiveService(null)}

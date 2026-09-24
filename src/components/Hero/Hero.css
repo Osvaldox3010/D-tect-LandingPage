@@ -8,7 +8,7 @@
    se veían como una sola columna con mucho espacio vacío alrededor de la
    foto. Por debajo de 912px sigue apilado en una sola columna. */
 @media (min-width:912px){
-  .hero__grid{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; min-height:520px; }
+  .hero__grid{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; min-height:560px; }
   .hero__grid > div:first-child{ padding-right:24px; }
 }
 
@@ -61,7 +61,26 @@
    texto de al lado ni qué tan alta sea la imagen activa. */
 .hero__visual{ position:relative; height:290px; display:flex; align-items:center; justify-content:center; }
 @media (min-width:640px){ .hero__visual{ height:360px; } }
-@media (min-width:912px){ .hero__visual{ height:440px; } }
+/* MODIFICADO: en el layout de PC (≥912px, 2 columnas) la columna de texto
+   suele quedar más alta que la imagen, y como la imagen (sobre todo la de
+   Poligrafía, apaisada) se centra dentro de .hero__visual, sobraba mucho
+   aire arriba de la foto y se veía como un hueco en blanco pegado al
+   header. Se sube un poco de alto (440->480, sigue cabiendo de sobra en
+   la fila: la columna de texto mide ~490-530px en estos anchos) y se
+   recorre el bloque completo (imagen + chip de servicio) un poco hacia
+   arriba y a la derecha con transform — solo un empujón sutil, no cambia
+   el tamaño de la fila ni el layout de columnas. SOLO en este breakpoint:
+   en mobile/tablet (una sola columna, apilado) no hay este hueco porque
+   la imagen ya fluye a ancho completo después del texto. */
+/* MODIFICADO (2da vuelta): el ajuste anterior (440->480, +10%) se notaba
+   poco al ver el carrusel rotar (no había foto de referencia al lado para
+   comparar). Se sube más el tope (480->560, usando ya todo el alto libre
+   que la fila tiene en estos anchos: la columna de texto mide ~530-630px)
+   y se ajusta el corrimiento a juego. SOLO PC (≥912px); mobile/tablet no
+   se toca. */
+@media (min-width:912px){
+  .hero__visual{ height:560px; transform:translate(20px, -34px); }
+}
 
 /* Capa ambiental: cubre TODA la sección del Hero (texto + visual), sin caja,
    sin overflow/border-radius que la encierre. Vive detrás de .hero__grid
@@ -98,7 +117,14 @@
    la foto queda en su propia columna, con más aire alrededor que en el
    layout apilado — se ensancha el marco en el mismo punto para
    aprovecharlo, en vez de quedarse topada en 420px como en mobile. */
-@media (min-width:912px){ .stage-frame{ width:min(480px,80%); } }
+/* MODIFICADO: un poco más de margen (88% en vez de 80%) para que la foto
+   se vea un poco más grande en PC, siempre manteniendo su proporción
+   real (ver nota de object-fit:contain más abajo) — nunca se recorta ni
+   se fuerza a un cuadro cuadrado. */
+/* MODIFICADO (2da vuelta): 88% se sentía igual que antes; se sube a 97%
+   (prácticamente todo el ancho disponible de la columna) para que el
+   salto de tamaño sea evidente. */
+@media (min-width:912px){ .stage-frame{ width:min(640px,97%); } }
 /* MODIFICADO: antes solo se limitaba el ANCHO (width:100%, height:auto) y
    se asumía que todas las fotos eran más anchas que altas. Las de
    "Antecedentes penales" y "Estudio socioeconómico" son más altas que
@@ -116,7 +142,7 @@
    (limitadas por max-height) y verticales (limitadas por max-width). */
 .stage-frame img{ display:block; width:auto; height:auto; max-width:100%; max-height:290px; object-fit:contain; margin-inline:auto; }
 @media (min-width:640px){ .stage-frame img{ max-height:360px; } }
-@media (min-width:912px){ .stage-frame img{ max-height:440px; } }
+@media (min-width:912px){ .stage-frame img{ max-height:560px; } }
 
 /* Chip de servicio: posición FIJA, pegada al fondo de .hero__stage (tamaño
    ahora realmente constante), separada de la imagen a propósito — nunca
