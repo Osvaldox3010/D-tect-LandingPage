@@ -3,9 +3,7 @@
   "name": "d-tect-landingpage",
   "compatibility_date": "2026-08-28",
   "main": "./worker/index.js",
-  // Dominio personalizado. Requiere que grupo-d-tect.com ya sea una zona
-  // activa en esta cuenta de Cloudflare (nameservers apuntando a Cloudflare)
-  // ANTES de correr `npm run deploy` — ver INSTALL.md sección 8.
+
   "routes": [
     { "pattern": "grupo-d-tect.com", "custom_domain": true },
     { "pattern": "www.grupo-d-tect.com", "custom_domain": true }
@@ -15,10 +13,8 @@
     // "Domain verified: Your domain is ready to send emails." el 3 de
     // septiembre de 2026. Ya no depende del sandbox de Resend.
     "FROM_EMAIL": "D-TECT <no-reply@mail.grupo-d-tect.com>",
-    // Correo(s) que reciben la notificación de cada formulario. Cámbialo por
-    // el correo corporativo definitivo si jimenezosvaldo780@gmail.com era
-    // solo un correo de pruebas.
-    "CONTACT_TO_EMAIL": "jimenezosvaldo780@gmail.com"
+
+    "CONTACT_TO_EMAIL": "contacto@grupo-d-tect.com"
   },
   "assets": {
     "binding": "ASSETS",
@@ -28,3 +24,4 @@
     "enabled": true
   }
 }
+
