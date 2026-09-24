@@ -88,7 +88,7 @@ export function Contact({ onOpenPrivacy }) {
               <MapView />
               <span className="map-card__label">Nuestra ubicación</span>
               <div className="map-card__addr">
-                <strong>D-TECT — Oficina Central</strong>
+                <strong>Grupo D-TECT — Oficina Central</strong>
                 <span>{OFFICE.address}</span>
                 <a
                   className="map-card__addr-link"

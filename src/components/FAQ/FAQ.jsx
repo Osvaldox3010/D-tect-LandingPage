@@ -9,7 +9,7 @@ const QUESTIONS = [
     a: 'Son un conjunto de evaluaciones —psicológicas, poligráficas, toxicológicas, socioeconómicas y de antecedentes penales— que previenen riesgos internos y verifican que el personal actúe dentro del marco de valores de la organización.',
   },
   {
-    q: '¿Qué evaluaciones ofrece D-TECT?',
+    q: '¿Qué evaluaciones ofrece Grupo D-TECT?',
     a: 'Poligrafía, toxicología, psicometría, estudio socioeconómico y verificación de antecedentes penales, de forma individual o como programa integral.',
   },
   {

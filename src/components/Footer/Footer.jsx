@@ -121,7 +121,7 @@ export function Footer({ onOpenModal }) {
           </div> */}
         </div>
 
-        <div className="footer-bottom">© {new Date().getFullYear()} D-TECT. Todos los derechos reservados.</div>
+        <div className="footer-bottom">© {new Date().getFullYear()} Grupo D-TECT. Todos los derechos reservados.</div>
       </div>
     </footer>
   );
