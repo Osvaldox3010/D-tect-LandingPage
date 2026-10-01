@@ -29,14 +29,21 @@
 /* ---- Modal de documento (Aviso de privacidad en PDF) ----
    Mismo look & feel que el resto de modales (mismo .modal base: fondo,
    radios, tipografía), solo más ancho/alto para poder leer el PDF
-   cómodamente, con el visor de PDF nativo del navegador dentro. */
+   cómodamente. MODIFICADO: ya no se apoya en el visor de PDF nativo del
+   navegador (iframe) — el PDF se dibuja página por página en <canvas>
+   (ver .privacy-pdf), así el navegador nunca muestra su propia
+   herramienta/barra de PDF, solo nuestro diseño. */
 .modal--document{ max-width:760px; }
 .modal--document .modal__sub a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
 .modal--document .document-frame{
   margin-top:6px; width:100%; height:min(70vh,640px); border-radius:var(--r-md);
-  overflow:hidden; border:1px solid var(--border-soft); background:#fff;
+  overflow-y:auto; overflow-x:hidden; border:1px solid var(--border-soft); background:var(--bg-base, #f2f2ee);
+  padding:16px;
 }
-.modal--document .document-frame iframe{ display:block; width:100%; height:100%; border:0; }
+.privacy-pdf{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+.privacy-pdf__page{ max-width:100%; height:auto; display:block; border-radius:4px; box-shadow:0 1px 3px rgba(15,23,42,.15); background:#fff; }
+.privacy-pdf__status{ text-align:center; padding:40px 12px; font-size:13px; color:var(--text-gray); }
+.privacy-pdf__status--error{ color:var(--brand-red); }
 
 .modal__close{
   position:absolute; top:16px; right:16px; width:38px; height:38px; border-radius:50%;
