@@ -73,10 +73,6 @@ export function PrivacyModal({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} variant="document" titleId="privacyModalTitle" ariaLabel="Aviso de privacidad">
       <Eyebrow className="modal__eyebrow">LEGAL</Eyebrow>
       <h3 id="privacyModalTitle">Aviso de privacidad</h3>
-        {/* <p className="modal__sub">
-          Si prefieres descargarlo, puedes{' '}
-          <a href={PRIVACY_PDF_URL} target="_blank" rel="noopener noreferrer" download>descargarlo aquí</a>.
-        </p> */}
       <div className="document-frame">
         <div ref={containerRef} className="privacy-pdf" />
         {status === 'loading' && <p className="privacy-pdf__status">Cargando documento…</p>}
