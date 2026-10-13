@@ -85,3 +85,5 @@ export function PrivacyModal({ isOpen, onClose }) {
     </Modal>
   );
 }
+
+

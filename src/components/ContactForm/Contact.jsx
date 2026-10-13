@@ -90,6 +90,7 @@ export function Contact({ onOpenPrivacy }) {
               <div className="map-card__addr">
                 <strong>Grupo D-TECT — Oficina Central</strong>
                 <span>{OFFICE.address}</span>
+                <span className="map-card__note">El acceso es por la puerta a un costado del OXXO que aparece en el mapa.</span>
                 <a
                   className="map-card__addr-link"
                   href={OFFICE.mapsUrl}
